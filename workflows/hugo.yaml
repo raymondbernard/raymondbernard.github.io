@@ -39,3 +39,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
           artifact_name: hugo-build-${{ github.run_id }}
+services:
+  disqus:
+    shortname: your-disqus-shortname
