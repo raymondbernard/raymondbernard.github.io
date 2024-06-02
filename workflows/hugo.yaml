@@ -1,0 +1,41 @@
+name: Build and Deploy Hugo Site
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
+
+      - name: List directory contents
+        run: ls -al
+
+      - name: List Hugo site directory contents
+        run: ls -al
+
+      - name: Build with Hugo
+        run: hugo --minify --baseURL "https://raymondbernard.github.io/" --verbose
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hugo-build-${{ github.run_id }}
+          path: .
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          artifact_name: hugo-build-${{ github.run_id }}
