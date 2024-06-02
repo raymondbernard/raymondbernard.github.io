@@ -1,132 +1,198 @@
-<!doctype html><html lang=en-us>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>Ray Bernard's Finetune Journey</title>
-<meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="SPDX-License-Identifier: Apache-2.0 Copyright (c) 2024, Rahul Unnikrishnan Nair rahul.unnikrishnan.nair@intel.com Ray Bernard ray.bernard@outlooi.com
-Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance.
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Ray Bernard&#39;s Finetune Journey</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance. Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud
 Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed.">
-<meta name=generator content="Hugo 0.92.2">
-<meta name=robots content="noindex, nofollow">
-<link rel=stylesheet href=/ananke/css/main.min.css>
-<link rel=canonical href=https://raymondbernard.github.io/posts/llama3-updated/>
-<meta property="og:title" content>
-<meta property="og:description" content="SPDX-License-Identifier: Apache-2.0 Copyright (c) 2024, Rahul Unnikrishnan Nair rahul.unnikrishnan.nair@intel.com Ray Bernard ray.bernard@outlooi.com
-Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance.
+    <meta name="generator" content="Hugo 0.92.2" />
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://raymondbernard.github.io/posts/llama3-updated/">
+    
+
+    <meta property="og:title" content="" />
+<meta property="og:description" content="Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance. Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud
+Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://raymondbernard.github.io/posts/llama3-updated/" /><meta property="article:section" content="posts" />
+
+
+
+<meta itemprop="name" content="">
+<meta itemprop="description" content="Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance. Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud
 Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://raymondbernard.github.io/posts/llama3-updated/"><meta property="article:section" content="posts">
-<meta itemprop=name content>
-<meta itemprop=description content="SPDX-License-Identifier: Apache-2.0 Copyright (c) 2024, Rahul Unnikrishnan Nair rahul.unnikrishnan.nair@intel.com Ray Bernard ray.bernard@outlooi.com
-Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance.
-Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed.">
-<meta itemprop=wordCount content="4772">
-<meta itemprop=keywords content><meta name=twitter:card content="summary">
-<meta name=twitter:title content>
-<meta name=twitter:description content="SPDX-License-Identifier: Apache-2.0 Copyright (c) 2024, Rahul Unnikrishnan Nair rahul.unnikrishnan.nair@intel.com Ray Bernard ray.bernard@outlooi.com
-Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance.
-Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed.">
-</head>
-<body class="ma0 avenir bg-near-white">
-<header>
-<div class=bg-black>
-<nav class="pv3 ph3 ph4-ns" role=navigation>
-<div class="flex-l justify-between items-center center">
-<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
-Ray Bernard's Finetune Journey
-</a>
-<div class="flex-l items-center">
-<div class=ananke-socials>
+
+<meta itemprop="wordCount" content="4784">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance. Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud
+Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed."/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Ray Bernard&#39;s Finetune Journey
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
 </div>
-</div>
-</div>
+
+    </div>
+  </div>
 </nav>
-</div>
-</header>
-<main class=pb7 role=main>
-<article class="flex-l flex-wrap justify-between mw8 center ph3">
-<header class="mt4 w-100">
-<aside class="instapaper_ignoref b helvetica tracked ttu">
-Posts
-</aside>
-<div id=sharing class="mt3 ananke-socials">
-</div>
-<h1 class="f1 athelas mt3 mb1"></h1>
-</header>
-<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2024, Rahul Unnikrishnan Nair <a href=mailto:rahul.unnikrishnan.nair@intel.com>rahul.unnikrishnan.nair@intel.com</a>
-Ray Bernard <a href=mailto:ray.bernard@outlooi.com>ray.bernard@outlooi.com</a></p>
-<h2 id=finetuning-llama3-8b-instruct-on-intel-max-series-gpus->Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀</h2>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1"></h1>
+      
+      
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h2 id="finetuning-llama3-8b-instruct-on-intel-max-series-gpus-">Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀</h2>
 <p>Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card
-Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance.</p>
-<h3 id=step-1-initial-setup>Step 1: Initial Setup</h3>
+Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance.
+Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud</p>
+<h3 id="step-1-initial-setup">Step 1: Initial Setup</h3>
 <p>Run this step only once to ensure you have the proper libraries installed. Additionally, make sure to use the Modin kernel!</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> sys
-<span style=color:#f92672>import</span> site
-<span style=color:#f92672>import</span> os
-<span style=color:#f92672>import</span> subprocess
-<span style=color:#f92672>import</span> shutil
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> sys
+<span style="color:#f92672">import</span> site
+<span style="color:#f92672">import</span> os
+<span style="color:#f92672">import</span> subprocess
+<span style="color:#f92672">import</span> shutil
 
-<span style=color:#75715e># Uninstall the invalid distributions if they are partially installed</span>
-subprocess<span style=color:#f92672>.</span>run([<span style=color:#e6db74>&#34;pip&#34;</span>, <span style=color:#e6db74>&#34;uninstall&#34;</span>, <span style=color:#e6db74>&#34;-y&#34;</span>, <span style=color:#e6db74>&#34;torch&#34;</span>, <span style=color:#e6db74>&#34;transformers&#34;</span>])
+<span style="color:#75715e"># Uninstall the invalid distributions if they are partially installed</span>
+subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;pip&#34;</span>, <span style="color:#e6db74">&#34;uninstall&#34;</span>, <span style="color:#e6db74">&#34;-y&#34;</span>, <span style="color:#e6db74">&#34;torch&#34;</span>, <span style="color:#e6db74">&#34;transformers&#34;</span>])
 
-<span style=color:#75715e># Clean up the site-packages directory</span>
-site_packages_dir <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>expanduser(<span style=color:#e6db74>&#34;~/.local/lib/python3.9/site-packages&#34;</span>)
+<span style="color:#75715e"># Clean up the site-packages directory</span>
+site_packages_dir <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>expanduser(<span style="color:#e6db74">&#34;~/.local/lib/python3.9/site-packages&#34;</span>)
 
-<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>remove_directory</span>(dir_path):
-    <span style=color:#66d9ef>if</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>exists(dir_path):
-        shutil<span style=color:#f92672>.</span>rmtree(dir_path, ignore_errors<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">remove_directory</span>(dir_path):
+    <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>exists(dir_path):
+        shutil<span style="color:#f92672">.</span>rmtree(dir_path, ignore_errors<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 
-torch_dirs <span style=color:#f92672>=</span> [os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>join(site_packages_dir, d) <span style=color:#66d9ef>for</span> d <span style=color:#f92672>in</span> os<span style=color:#f92672>.</span>listdir(site_packages_dir) <span style=color:#66d9ef>if</span> d<span style=color:#f92672>.</span>startswith(<span style=color:#e6db74>&#34;torch&#34;</span>)]
-transformers_dirs <span style=color:#f92672>=</span> [os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>join(site_packages_dir, d) <span style=color:#66d9ef>for</span> d <span style=color:#f92672>in</span> os<span style=color:#f92672>.</span>listdir(site_packages_dir) <span style=color:#66d9ef>if</span> d<span style=color:#f92672>.</span>startswith(<span style=color:#e6db74>&#34;transformers&#34;</span>)]
+torch_dirs <span style="color:#f92672">=</span> [os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(site_packages_dir, d) <span style="color:#66d9ef">for</span> d <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>listdir(site_packages_dir) <span style="color:#66d9ef">if</span> d<span style="color:#f92672">.</span>startswith(<span style="color:#e6db74">&#34;torch&#34;</span>)]
+transformers_dirs <span style="color:#f92672">=</span> [os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(site_packages_dir, d) <span style="color:#66d9ef">for</span> d <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>listdir(site_packages_dir) <span style="color:#66d9ef">if</span> d<span style="color:#f92672">.</span>startswith(<span style="color:#e6db74">&#34;transformers&#34;</span>)]
 
-<span style=color:#66d9ef>for</span> dir_path <span style=color:#f92672>in</span> torch_dirs <span style=color:#f92672>+</span> transformers_dirs:
+<span style="color:#66d9ef">for</span> dir_path <span style="color:#f92672">in</span> torch_dirs <span style="color:#f92672">+</span> transformers_dirs:
     remove_directory(dir_path)
 
-print(<span style=color:#e6db74>&#34;Cleaned up invalid directories.&#34;</span>)
-<span style=color:#75715e># Clear the pip cache</span>
-print(<span style=color:#e6db74>&#34;Clearing the pip cache...&#34;</span>)
-subprocess<span style=color:#f92672>.</span>run([<span style=color:#e6db74>&#34;pip&#34;</span>, <span style=color:#e6db74>&#34;cache&#34;</span>, <span style=color:#e6db74>&#34;purge&#34;</span>])
+print(<span style="color:#e6db74">&#34;Cleaned up invalid directories.&#34;</span>)
+<span style="color:#75715e"># Clear the pip cache</span>
+print(<span style="color:#e6db74">&#34;Clearing the pip cache...&#34;</span>)
+subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;pip&#34;</span>, <span style="color:#e6db74">&#34;cache&#34;</span>, <span style="color:#e6db74">&#34;purge&#34;</span>])
 
-cache_dir <span style=color:#f92672>=</span> result<span style=color:#f92672>.</span>stdout<span style=color:#f92672>.</span>strip()
+cache_dir <span style="color:#f92672">=</span> result<span style="color:#f92672">.</span>stdout<span style="color:#f92672">.</span>strip()
 
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Cache directory: </span><span style=color:#e6db74>{</span>cache_dir<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Cache directory: </span><span style="color:#e6db74">{</span>cache_dir<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 
-<span style=color:#75715e># Check the size of the cache directory</span>
-result <span style=color:#f92672>=</span> subprocess<span style=color:#f92672>.</span>run([<span style=color:#e6db74>&#34;du&#34;</span>, <span style=color:#e6db74>&#34;-sh&#34;</span>, cache_dir], capture_output<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>, text<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Cache size: </span><span style=color:#e6db74>{</span>result<span style=color:#f92672>.</span>stdout<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+<span style="color:#75715e"># Check the size of the cache directory</span>
+result <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>run([<span style="color:#e6db74">&#34;du&#34;</span>, <span style="color:#e6db74">&#34;-sh&#34;</span>, cache_dir], capture_output<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, text<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Cache size: </span><span style="color:#e6db74">{</span>result<span style="color:#f92672">.</span>stdout<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 
-<span style=color:#75715e># Install the required packages</span>
-<span style=color:#960050;background-color:#1e0010>!</span>{sys<span style=color:#f92672>.</span>executable} <span style=color:#f92672>-</span>m pip install torch<span style=color:#f92672>==</span><span style=color:#ae81ff>2.1.0</span><span style=color:#f92672>.</span>post2 torchvision<span style=color:#f92672>==</span><span style=color:#ae81ff>0.16.0</span><span style=color:#f92672>.</span>post2 torchaudio<span style=color:#f92672>==</span><span style=color:#ae81ff>2.1.0</span><span style=color:#f92672>.</span>post2 intel<span style=color:#f92672>-</span>extension<span style=color:#f92672>-</span><span style=color:#66d9ef>for</span><span style=color:#f92672>-</span>pytorch<span style=color:#f92672>==</span><span style=color:#ae81ff>2.1.30</span><span style=color:#f92672>+</span>xpu oneccl_bind_pt<span style=color:#f92672>==</span><span style=color:#ae81ff>2.1.300</span><span style=color:#f92672>+</span>xpu <span style=color:#f92672>--</span>extra<span style=color:#f92672>-</span>index<span style=color:#f92672>-</span>url https:<span style=color:#f92672>//</span>pytorch<span style=color:#f92672>-</span>extension<span style=color:#f92672>.</span>intel<span style=color:#f92672>.</span>com<span style=color:#f92672>/</span>release<span style=color:#f92672>-</span>whl<span style=color:#f92672>/</span>stable<span style=color:#f92672>/</span>xpu<span style=color:#f92672>/</span>us<span style=color:#f92672>/</span>
-<span style=color:#960050;background-color:#1e0010>!</span>{sys<span style=color:#f92672>.</span>executable} <span style=color:#f92672>-</span>m pip install <span style=color:#f92672>--</span>upgrade  <span style=color:#e6db74>&#34;transformers&gt;=4.38.*&#34;</span>
-<span style=color:#960050;background-color:#1e0010>!</span>{sys<span style=color:#f92672>.</span>executable} <span style=color:#f92672>-</span>m pip install <span style=color:#f92672>--</span>upgrade  <span style=color:#e6db74>&#34;datasets&gt;=2.18.*&#34;</span>
-<span style=color:#960050;background-color:#1e0010>!</span>{sys<span style=color:#f92672>.</span>executable} <span style=color:#f92672>-</span>m pip install <span style=color:#f92672>--</span>upgrade <span style=color:#e6db74>&#34;wandb&gt;=0.16.*&#34;</span>
-<span style=color:#960050;background-color:#1e0010>!</span>{sys<span style=color:#f92672>.</span>executable} <span style=color:#f92672>-</span>m pip install <span style=color:#f92672>--</span>upgrade <span style=color:#e6db74>&#34;trl&gt;=0.7.11&#34;</span>
-<span style=color:#960050;background-color:#1e0010>!</span>{sys<span style=color:#f92672>.</span>executable} <span style=color:#f92672>-</span>m pip install <span style=color:#f92672>--</span>upgrade <span style=color:#e6db74>&#34;peft&gt;=0.9.0&#34;</span>
-<span style=color:#960050;background-color:#1e0010>!</span>{sys<span style=color:#f92672>.</span>executable} <span style=color:#f92672>-</span>m pip install <span style=color:#f92672>--</span>upgrade <span style=color:#e6db74>&#34;accelerate&gt;=0.28.*&#34;</span>
-<span style=color:#960050;background-color:#1e0010>!</span>{sys<span style=color:#f92672>.</span>executable} <span style=color:#f92672>-</span>m pip install <span style=color:#f92672>--</span>upgrade <span style=color:#e6db74>&#34;joblib&#34;</span>
-<span style=color:#960050;background-color:#1e0010>!</span>{sys<span style=color:#f92672>.</span>executable} <span style=color:#f92672>-</span>m pip install <span style=color:#f92672>--</span>upgrade <span style=color:#e6db74>&#34;threadpoolctl&#34;</span>
-
-
-<span style=color:#75715e># Get the site-packages directory</span>
-site_packages_dir <span style=color:#f92672>=</span> site<span style=color:#f92672>.</span>getsitepackages()[<span style=color:#ae81ff>0</span>]
-
-<span style=color:#75715e># add the site pkg directory where these pkgs are insalled to the top of sys.path</span>
-<span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> os<span style=color:#f92672>.</span>access(site_packages_dir, os<span style=color:#f92672>.</span>W_OK):
-    user_site_packages_dir <span style=color:#f92672>=</span> site<span style=color:#f92672>.</span>getusersitepackages()
-    <span style=color:#66d9ef>if</span> user_site_packages_dir <span style=color:#f92672>in</span> sys<span style=color:#f92672>.</span>path:
-        sys<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>remove(user_site_packages_dir)
-    sys<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>insert(<span style=color:#ae81ff>0</span>, user_site_packages_dir)
-<span style=color:#66d9ef>else</span>:
-    <span style=color:#66d9ef>if</span> site_packages_dir <span style=color:#f92672>in</span> sys<span style=color:#f92672>.</span>path:
-        sys<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>remove(site_packages_dir)
-    sys<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>insert(<span style=color:#ae81ff>0</span>, site_packages_dir)
+<span style="color:#75715e"># Install the required packages</span>
+<span style="color:#960050;background-color:#1e0010">!</span>{sys<span style="color:#f92672">.</span>executable} <span style="color:#f92672">-</span>m pip install torch<span style="color:#f92672">==</span><span style="color:#ae81ff">2.1.0</span><span style="color:#f92672">.</span>post2 torchvision<span style="color:#f92672">==</span><span style="color:#ae81ff">0.16.0</span><span style="color:#f92672">.</span>post2 torchaudio<span style="color:#f92672">==</span><span style="color:#ae81ff">2.1.0</span><span style="color:#f92672">.</span>post2 intel<span style="color:#f92672">-</span>extension<span style="color:#f92672">-</span><span style="color:#66d9ef">for</span><span style="color:#f92672">-</span>pytorch<span style="color:#f92672">==</span><span style="color:#ae81ff">2.1.30</span><span style="color:#f92672">+</span>xpu oneccl_bind_pt<span style="color:#f92672">==</span><span style="color:#ae81ff">2.1.300</span><span style="color:#f92672">+</span>xpu <span style="color:#f92672">--</span>extra<span style="color:#f92672">-</span>index<span style="color:#f92672">-</span>url https:<span style="color:#f92672">//</span>pytorch<span style="color:#f92672">-</span>extension<span style="color:#f92672">.</span>intel<span style="color:#f92672">.</span>com<span style="color:#f92672">/</span>release<span style="color:#f92672">-</span>whl<span style="color:#f92672">/</span>stable<span style="color:#f92672">/</span>xpu<span style="color:#f92672">/</span>us<span style="color:#f92672">/</span>
+<span style="color:#960050;background-color:#1e0010">!</span>{sys<span style="color:#f92672">.</span>executable} <span style="color:#f92672">-</span>m pip install <span style="color:#f92672">--</span>upgrade  <span style="color:#e6db74">&#34;transformers&gt;=4.38.*&#34;</span>
+<span style="color:#960050;background-color:#1e0010">!</span>{sys<span style="color:#f92672">.</span>executable} <span style="color:#f92672">-</span>m pip install <span style="color:#f92672">--</span>upgrade  <span style="color:#e6db74">&#34;datasets&gt;=2.18.*&#34;</span>
+<span style="color:#960050;background-color:#1e0010">!</span>{sys<span style="color:#f92672">.</span>executable} <span style="color:#f92672">-</span>m pip install <span style="color:#f92672">--</span>upgrade <span style="color:#e6db74">&#34;wandb&gt;=0.16.*&#34;</span>
+<span style="color:#960050;background-color:#1e0010">!</span>{sys<span style="color:#f92672">.</span>executable} <span style="color:#f92672">-</span>m pip install <span style="color:#f92672">--</span>upgrade <span style="color:#e6db74">&#34;trl&gt;=0.7.11&#34;</span>
+<span style="color:#960050;background-color:#1e0010">!</span>{sys<span style="color:#f92672">.</span>executable} <span style="color:#f92672">-</span>m pip install <span style="color:#f92672">--</span>upgrade <span style="color:#e6db74">&#34;peft&gt;=0.9.0&#34;</span>
+<span style="color:#960050;background-color:#1e0010">!</span>{sys<span style="color:#f92672">.</span>executable} <span style="color:#f92672">-</span>m pip install <span style="color:#f92672">--</span>upgrade <span style="color:#e6db74">&#34;accelerate&gt;=0.28.*&#34;</span>
+<span style="color:#960050;background-color:#1e0010">!</span>{sys<span style="color:#f92672">.</span>executable} <span style="color:#f92672">-</span>m pip install <span style="color:#f92672">--</span>upgrade <span style="color:#e6db74">&#34;joblib&#34;</span>
+<span style="color:#960050;background-color:#1e0010">!</span>{sys<span style="color:#f92672">.</span>executable} <span style="color:#f92672">-</span>m pip install <span style="color:#f92672">--</span>upgrade <span style="color:#e6db74">&#34;threadpoolctl&#34;</span>
 
 
-</code></pre></div><h3 id=step-2-check-intel-xpu-availability-and-retrieve-device-capabilities>Step 2: Check Intel XPU Availability and Retrieve Device Capabilities</h3>
-<p>In this step, we will import necessary libraries, check the availability of Intel XPU (eXtreme Performance Unit), and retrieve detailed device capabilities. This ensures that our environment is correctly configured to leverage the Intel XPU for optimal performancnt available")</p>
-<pre tabindex=0><code>
+<span style="color:#75715e"># Get the site-packages directory</span>
+site_packages_dir <span style="color:#f92672">=</span> site<span style="color:#f92672">.</span>getsitepackages()[<span style="color:#ae81ff">0</span>]
+
+<span style="color:#75715e"># add the site pkg directory where these pkgs are insalled to the top of sys.path</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>access(site_packages_dir, os<span style="color:#f92672">.</span>W_OK):
+    user_site_packages_dir <span style="color:#f92672">=</span> site<span style="color:#f92672">.</span>getusersitepackages()
+    <span style="color:#66d9ef">if</span> user_site_packages_dir <span style="color:#f92672">in</span> sys<span style="color:#f92672">.</span>path:
+        sys<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>remove(user_site_packages_dir)
+    sys<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>insert(<span style="color:#ae81ff">0</span>, user_site_packages_dir)
+<span style="color:#66d9ef">else</span>:
+    <span style="color:#66d9ef">if</span> site_packages_dir <span style="color:#f92672">in</span> sys<span style="color:#f92672">.</span>path:
+        sys<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>remove(site_packages_dir)
+    sys<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>insert(<span style="color:#ae81ff">0</span>, site_packages_dir)
+
+
+</code></pre></div><h3 id="step-2-check-intel-xpu-availability-and-retrieve-device-capabilities">Step 2: Check Intel XPU Availability and Retrieve Device Capabilities</h3>
+<p>In this step, we will import necessary libraries, check the availability of Intel XPU (eXtreme Performance Unit), and retrieve detailed device capabilities. This ensures that our environment is correctly configured to leverage the Intel XPU for optimal performancnt available&quot;)</p>
+<pre tabindex="0"><code>
 
 ```python
 import torch
@@ -151,7 +217,7 @@ else:
     print(&quot;Intel XPU is not available&quot;)
 
 
-</code></pre><h3 id=step-3-optimize-environment-for-intel-max-series-gpus>Step 3: Optimize Environment for Intel Max Series GPUs</h3>
+</code></pre><h3 id="step-3-optimize-environment-for-intel-max-series-gpus">Step 3: Optimize Environment for Intel Max Series GPUs</h3>
 <p>To optimize performance when using Intel Max Series GPUs:</p>
 <ol>
 <li><strong>Suppress Warnings</strong>: Import the <code>warnings</code> module and configure it to ignore unnecessary warnings.</li>
@@ -168,102 +234,102 @@ else:
 </li>
 <li><strong>Print Configuration</strong>: Display the number of physical cores, cores per socket, and OpenMP environment variables to verify the settings.</li>
 </ol>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> warnings
-warnings<span style=color:#f92672>.</span>filterwarnings(<span style=color:#e6db74>&#34;ignore&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> warnings
+warnings<span style="color:#f92672">.</span>filterwarnings(<span style="color:#e6db74">&#34;ignore&#34;</span>)
 
-<span style=color:#f92672>import</span> os
-<span style=color:#f92672>import</span> psutil
+<span style="color:#f92672">import</span> os
+<span style="color:#f92672">import</span> psutil
 
-num_physical_cores <span style=color:#f92672>=</span> psutil<span style=color:#f92672>.</span>cpu_count(logical<span style=color:#f92672>=</span><span style=color:#66d9ef>False</span>)
-num_cores_per_socket <span style=color:#f92672>=</span> num_physical_cores <span style=color:#f92672>//</span> <span style=color:#ae81ff>2</span>
+num_physical_cores <span style="color:#f92672">=</span> psutil<span style="color:#f92672">.</span>cpu_count(logical<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+num_cores_per_socket <span style="color:#f92672">=</span> num_physical_cores <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>
 
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;TOKENIZERS_PARALLELISM&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;0&#34;</span>
-<span style=color:#75715e>#HF_TOKEN = os.environ[&#34;HF_TOKEN&#34;]</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;TOKENIZERS_PARALLELISM&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0&#34;</span>
+<span style="color:#75715e">#HF_TOKEN = os.environ[&#34;HF_TOKEN&#34;]</span>
 
-<span style=color:#75715e># Set the LD_PRELOAD environment variable</span>
-ld_preload <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>environ<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;LD_PRELOAD&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)
-conda_prefix <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>environ<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;CONDA_PREFIX&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)
-<span style=color:#75715e># Improve memory allocation performance, if tcmalloc is not available, please comment this line out</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;LD_PRELOAD&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>ld_preload<span style=color:#e6db74>}</span><span style=color:#e6db74>:</span><span style=color:#e6db74>{</span>conda_prefix<span style=color:#e6db74>}</span><span style=color:#e6db74>/lib/libtcmalloc.so&#34;</span>
-<span style=color:#75715e># Reduce the overhead of submitting commands to the GPU</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;1&#34;</span>
-<span style=color:#75715e># reducing memory accesses by fusing SDP ops</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;ENABLE_SDP_FUSION&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;1&#34;</span>
-<span style=color:#75715e># set openMP threads to number of physical cores</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;OMP_NUM_THREADS&#34;</span>] <span style=color:#f92672>=</span> str(num_physical_cores)
-<span style=color:#75715e># Set the thread affinity policy</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;OMP_PROC_BIND&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;close&#34;</span>
-<span style=color:#75715e># Set the places for thread pinning</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;OMP_PLACES&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;cores&#34;</span>
+<span style="color:#75715e"># Set the LD_PRELOAD environment variable</span>
+ld_preload <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;LD_PRELOAD&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)
+conda_prefix <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;CONDA_PREFIX&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)
+<span style="color:#75715e"># Improve memory allocation performance, if tcmalloc is not available, please comment this line out</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;LD_PRELOAD&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>ld_preload<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">{</span>conda_prefix<span style="color:#e6db74">}</span><span style="color:#e6db74">/lib/libtcmalloc.so&#34;</span>
+<span style="color:#75715e"># Reduce the overhead of submitting commands to the GPU</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;1&#34;</span>
+<span style="color:#75715e"># reducing memory accesses by fusing SDP ops</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;ENABLE_SDP_FUSION&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;1&#34;</span>
+<span style="color:#75715e"># set openMP threads to number of physical cores</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;OMP_NUM_THREADS&#34;</span>] <span style="color:#f92672">=</span> str(num_physical_cores)
+<span style="color:#75715e"># Set the thread affinity policy</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;OMP_PROC_BIND&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;close&#34;</span>
+<span style="color:#75715e"># Set the places for thread pinning</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;OMP_PLACES&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;cores&#34;</span>
 
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Number of physical cores: </span><span style=color:#e6db74>{</span>num_physical_cores<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Number of cores per socket: </span><span style=color:#e6db74>{</span>num_cores_per_socket<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;OpenMP environment variables:&#34;</span>)
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;  - OMP_NUM_THREADS: </span><span style=color:#e6db74>{</span>os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#39;OMP_NUM_THREADS&#39;</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;  - OMP_PROC_BIND: </span><span style=color:#e6db74>{</span>os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#39;OMP_PROC_BIND&#39;</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;  - OMP_PLACES: </span><span style=color:#e6db74>{</span>os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#39;OMP_PLACES&#39;</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-</code></pre></div><h3 id=step-4-monitor-xpu-memory-usage-in-real-time>Step 4: Monitor XPU Memory Usage in Real-Time</h3>
-<p>The following script sets up a real-time monitoring system that continuously displays the XPU memory usage in a Jupyter notebook, helping you keep track of resource utilization during model training and inference. This setup helps in maintaining optimal performance and preventing resource-related issues during your deep learning tasks. By keeping track of memory usage, you can prevent out-of-memory errors, optimize resource allocation, and ensure smooth training and inference processes. By monitoring these metrics, you can predict out-of-memory issues. If memory usage approaches the hardware limits, it’s an indication that the model or batch size might need adjusted etc.</p>
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Number of physical cores: </span><span style="color:#e6db74">{</span>num_physical_cores<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Number of cores per socket: </span><span style="color:#e6db74">{</span>num_cores_per_socket<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;OpenMP environment variables:&#34;</span>)
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;  - OMP_NUM_THREADS: </span><span style="color:#e6db74">{</span>os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;OMP_NUM_THREADS&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;  - OMP_PROC_BIND: </span><span style="color:#e6db74">{</span>os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;OMP_PROC_BIND&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;  - OMP_PLACES: </span><span style="color:#e6db74">{</span>os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;OMP_PLACES&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><h3 id="step-4-monitor-xpu-memory-usage-in-real-time">Step 4: Monitor XPU Memory Usage in Real-Time</h3>
+<p>The following script sets up a real-time monitoring system that continuously displays the XPU memory usage in a Jupyter notebook, helping you keep track of resource utilization during model training and inference. This setup helps in maintaining optimal performance and preventing resource-related issues during your deep learning tasks.  By keeping track of memory usage, you can prevent out-of-memory errors, optimize resource allocation, and ensure smooth training and inference processes. By monitoring these metrics, you can predict out-of-memory issues. If memory usage approaches the hardware limits, it’s an indication that the model or batch size might need adjusted etc.</p>
 <ul>
 <li><strong>Memory Reserved</strong>: Indicates the total memory reserved by the XPU. Helps in understanding the memory footprint of the running processes.</li>
 <li><strong>Memory Allocated</strong>: Shows the actual memory usage by tensors, crucial for identifying memory leaks or excessive usage.</li>
 <li><strong>Max Memory Reserved/Allocated</strong>: These metrics help in identifying peak memory usage, which is essential for planning and scaling your models.</li>
 <li>performance and preventing resource-related issues during your deep learning tasks.eemory_monitor(output)</li>
 </ul>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> asyncio
-<span style=color:#f92672>import</span> threading
-<span style=color:#f92672>import</span> torch
-<span style=color:#f92672>from</span> IPython.display <span style=color:#f92672>import</span> display, HTML
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> asyncio
+<span style="color:#f92672">import</span> threading
+<span style="color:#f92672">import</span> torch
+<span style="color:#f92672">from</span> IPython.display <span style="color:#f92672">import</span> display, HTML
 
-<span style=color:#f92672>import</span> torch
-<span style=color:#f92672>import</span> intel_extension_for_pytorch <span style=color:#66d9ef>as</span> ipex
+<span style="color:#f92672">import</span> torch
+<span style="color:#f92672">import</span> intel_extension_for_pytorch <span style="color:#66d9ef">as</span> ipex
 
-<span style=color:#66d9ef>if</span> torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>is_available():
-    torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>empty_cache()
+<span style="color:#66d9ef">if</span> torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>is_available():
+    torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>empty_cache()
     
-    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_memory_usage</span>():
-        memory_reserved <span style=color:#f92672>=</span> round(torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>memory_reserved() <span style=color:#f92672>/</span> <span style=color:#ae81ff>1024</span><span style=color:#f92672>**</span><span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>3</span>)
-        memory_allocated <span style=color:#f92672>=</span> round(torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>memory_allocated() <span style=color:#f92672>/</span> <span style=color:#ae81ff>1024</span><span style=color:#f92672>**</span><span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>3</span>)
-        max_memory_reserved <span style=color:#f92672>=</span> round(torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>max_memory_reserved() <span style=color:#f92672>/</span> <span style=color:#ae81ff>1024</span><span style=color:#f92672>**</span><span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>3</span>)
-        max_memory_allocated <span style=color:#f92672>=</span> round(torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>max_memory_allocated() <span style=color:#f92672>/</span> <span style=color:#ae81ff>1024</span><span style=color:#f92672>**</span><span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>3</span>)
-        <span style=color:#66d9ef>return</span> memory_reserved, memory_allocated, max_memory_reserved, max_memory_allocated
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_memory_usage</span>():
+        memory_reserved <span style="color:#f92672">=</span> round(torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>memory_reserved() <span style="color:#f92672">/</span> <span style="color:#ae81ff">1024</span><span style="color:#f92672">**</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>)
+        memory_allocated <span style="color:#f92672">=</span> round(torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>memory_allocated() <span style="color:#f92672">/</span> <span style="color:#ae81ff">1024</span><span style="color:#f92672">**</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>)
+        max_memory_reserved <span style="color:#f92672">=</span> round(torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>max_memory_reserved() <span style="color:#f92672">/</span> <span style="color:#ae81ff">1024</span><span style="color:#f92672">**</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>)
+        max_memory_allocated <span style="color:#f92672">=</span> round(torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>max_memory_allocated() <span style="color:#f92672">/</span> <span style="color:#ae81ff">1024</span><span style="color:#f92672">**</span><span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>)
+        <span style="color:#66d9ef">return</span> memory_reserved, memory_allocated, max_memory_reserved, max_memory_allocated
    
-    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>print_memory_usage</span>():
-        device_name <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>get_device_name()
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;XPU Name: </span><span style=color:#e6db74>{</span>device_name<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-        memory_reserved, memory_allocated, max_memory_reserved, max_memory_allocated <span style=color:#f92672>=</span> get_memory_usage()
-        memory_usage_text <span style=color:#f92672>=</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;XPU Memory: Reserved=</span><span style=color:#e6db74>{</span>memory_reserved<span style=color:#e6db74>}</span><span style=color:#e6db74> GB, Allocated=</span><span style=color:#e6db74>{</span>memory_allocated<span style=color:#e6db74>}</span><span style=color:#e6db74> GB, Max Reserved=</span><span style=color:#e6db74>{</span>max_memory_reserved<span style=color:#e6db74>}</span><span style=color:#e6db74> GB, Max Allocated=</span><span style=color:#e6db74>{</span>max_memory_allocated<span style=color:#e6db74>}</span><span style=color:#e6db74> GB&#34;</span>
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\r</span><span style=color:#e6db74>{</span>memory_usage_text<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>, end<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;&#34;</span>, flush<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_memory_usage</span>():
+        device_name <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>get_device_name()
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;XPU Name: </span><span style="color:#e6db74">{</span>device_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+        memory_reserved, memory_allocated, max_memory_reserved, max_memory_allocated <span style="color:#f92672">=</span> get_memory_usage()
+        memory_usage_text <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;XPU Memory: Reserved=</span><span style="color:#e6db74">{</span>memory_reserved<span style="color:#e6db74">}</span><span style="color:#e6db74"> GB, Allocated=</span><span style="color:#e6db74">{</span>memory_allocated<span style="color:#e6db74">}</span><span style="color:#e6db74"> GB, Max Reserved=</span><span style="color:#e6db74">{</span>max_memory_reserved<span style="color:#e6db74">}</span><span style="color:#e6db74"> GB, Max Allocated=</span><span style="color:#e6db74">{</span>max_memory_allocated<span style="color:#e6db74">}</span><span style="color:#e6db74"> GB&#34;</span>
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\r</span><span style="color:#e6db74">{</span>memory_usage_text<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>, end<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>, flush<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
     
-    <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>display_memory_usage</span>(output):
-        device_name <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>get_device_name()
-        output<span style=color:#f92672>.</span>update(HTML(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;&lt;p&gt;XPU Name: </span><span style=color:#e6db74>{</span>device_name<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/p&gt;&#34;</span>))
-        <span style=color:#66d9ef>while</span> <span style=color:#66d9ef>True</span>:
-            memory_reserved, memory_allocated, max_memory_reserved, max_memory_allocated <span style=color:#f92672>=</span> get_memory_usage()
-            memory_usage_text <span style=color:#f92672>=</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;XPU (</span><span style=color:#e6db74>{</span>device_name<span style=color:#e6db74>}</span><span style=color:#e6db74>) :: Memory: Reserved=</span><span style=color:#e6db74>{</span>memory_reserved<span style=color:#e6db74>}</span><span style=color:#e6db74> GB, Allocated=</span><span style=color:#e6db74>{</span>memory_allocated<span style=color:#e6db74>}</span><span style=color:#e6db74> GB, Max Reserved=</span><span style=color:#e6db74>{</span>max_memory_reserved<span style=color:#e6db74>}</span><span style=color:#e6db74> GB, Max Allocated=</span><span style=color:#e6db74>{</span>max_memory_allocated<span style=color:#e6db74>}</span><span style=color:#e6db74> GB&#34;</span>
-            output<span style=color:#f92672>.</span>update(HTML(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;&lt;p&gt;</span><span style=color:#e6db74>{</span>memory_usage_text<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/p&gt;&#34;</span>))
-            <span style=color:#66d9ef>await</span> asyncio<span style=color:#f92672>.</span>sleep(<span style=color:#ae81ff>5</span>)
+    <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">display_memory_usage</span>(output):
+        device_name <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>get_device_name()
+        output<span style="color:#f92672">.</span>update(HTML(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;&lt;p&gt;XPU Name: </span><span style="color:#e6db74">{</span>device_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/p&gt;&#34;</span>))
+        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+            memory_reserved, memory_allocated, max_memory_reserved, max_memory_allocated <span style="color:#f92672">=</span> get_memory_usage()
+            memory_usage_text <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;XPU (</span><span style="color:#e6db74">{</span>device_name<span style="color:#e6db74">}</span><span style="color:#e6db74">) :: Memory: Reserved=</span><span style="color:#e6db74">{</span>memory_reserved<span style="color:#e6db74">}</span><span style="color:#e6db74"> GB, Allocated=</span><span style="color:#e6db74">{</span>memory_allocated<span style="color:#e6db74">}</span><span style="color:#e6db74"> GB, Max Reserved=</span><span style="color:#e6db74">{</span>max_memory_reserved<span style="color:#e6db74">}</span><span style="color:#e6db74"> GB, Max Allocated=</span><span style="color:#e6db74">{</span>max_memory_allocated<span style="color:#e6db74">}</span><span style="color:#e6db74"> GB&#34;</span>
+            output<span style="color:#f92672">.</span>update(HTML(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;&lt;p&gt;</span><span style="color:#e6db74">{</span>memory_usage_text<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/p&gt;&#34;</span>))
+            <span style="color:#66d9ef">await</span> asyncio<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">5</span>)
     
-    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>start_memory_monitor</span>(output):
-        loop <span style=color:#f92672>=</span> asyncio<span style=color:#f92672>.</span>new_event_loop()
-        asyncio<span style=color:#f92672>.</span>set_event_loop(loop)
-        loop<span style=color:#f92672>.</span>create_task(display_memory_usage(output))
-        thread <span style=color:#f92672>=</span> threading<span style=color:#f92672>.</span>Thread(target<span style=color:#f92672>=</span>loop<span style=color:#f92672>.</span>run_forever)
-        thread<span style=color:#f92672>.</span>start()    
-    output <span style=color:#f92672>=</span> display(display_id<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start_memory_monitor</span>(output):
+        loop <span style="color:#f92672">=</span> asyncio<span style="color:#f92672">.</span>new_event_loop()
+        asyncio<span style="color:#f92672">.</span>set_event_loop(loop)
+        loop<span style="color:#f92672">.</span>create_task(display_memory_usage(output))
+        thread <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(target<span style="color:#f92672">=</span>loop<span style="color:#f92672">.</span>run_forever)
+        thread<span style="color:#f92672">.</span>start()    
+    output <span style="color:#f92672">=</span> display(display_id<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
     start_memory_monitor(output)
-<span style=color:#66d9ef>else</span>:
-    print(<span style=color:#e6db74>&#34;XPU device not available.&#34;</span>)
-</code></pre></div>
-<h2 id=step-5-log-into-your-hugging-face-account-and-entry-your-access-token>Step 5 Log into your hugging face account and entry your access token.</h2>
+<span style="color:#66d9ef">else</span>:
+    print(<span style="color:#e6db74">&#34;XPU device not available.&#34;</span>)
+</code></pre></div><!-- raw HTML omitted -->
+<h2 id="step-5-log-into-your-hugging-face-account-and-entry-your-access-token">Step 5 Log into your hugging face account and entry your access token.</h2>
 <p>Uncheck the Add token as git credential! 🎛️</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e>#loggin to huggnigface</span>
-<span style=color:#f92672>from</span> huggingface_hub <span style=color:#f92672>import</span> notebook_login
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#loggin to huggnigface</span>
+<span style="color:#f92672">from</span> huggingface_hub <span style="color:#f92672">import</span> notebook_login
 
 notebook_login()
 </code></pre></div><pre><code>VBox(children=(HTML(value='&lt;center&gt; &lt;img\nsrc=https://huggingface.co/front/assets/huggingface_logo-noborder.sv…
 </code></pre>
-<h2 id=step-6-configure-lora-for-efficient-training->Step 6 Configure LoRA for Efficient Training 🎛️</h2>
+<h2 id="step-6-configure-lora-for-efficient-training-">Step 6 Configure LoRA for Efficient Training 🎛️</h2>
 <p>In this step, we configure the LoRA (Low-Rank Adaptation) settings for efficient training of our model. LoRA is a technique that improves the efficiency of training by reducing the number of parameters through low-rank decomposition. Here, we instantiate a LoraConfig object with specific parameters tailored to our training needs.</p>
 <p>Instantiate LoRA Configuration:</p>
 <ul>
@@ -275,23 +341,23 @@ notebook_login()
 <li>task_type: Set to &ldquo;CAUSAL_LM&rdquo;, indicating that this configuration is for a causal language modeling task.</li>
 <li>This configuration optimizes the model&rsquo;s training efficiency and performance by carefully adjusting the parameters and specifying the target modules for low-rank adaptation.</li>
 </ul>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> peft <span style=color:#f92672>import</span> LoraConfig
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> peft <span style="color:#f92672">import</span> LoraConfig
 
-<span style=color:#75715e># Instantiate a LoraConfig object with specific parameters</span>
-lora_config <span style=color:#f92672>=</span> LoraConfig(
-    r<span style=color:#f92672>=</span><span style=color:#ae81ff>32</span>,  <span style=color:#75715e># The dimension of the low-rank decomposition. This parameter controls the trade-off between model capacity and efficiency.</span>
-    lora_alpha<span style=color:#f92672>=</span><span style=color:#ae81ff>16</span>,  <span style=color:#75715e># The scaling factor for the LoRA module. It is used to adjust the output of the low-rank decomposition.</span>
-    lora_dropout<span style=color:#f92672>=</span><span style=color:#ae81ff>0.5</span>,  <span style=color:#75715e># The dropout rate applied to the LoRA layers to prevent overfitting. A higher value means more regularization.</span>
-    bias<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;none&#34;</span>,  <span style=color:#75715e># Specifies how to handle biases in the LoRA layers. &#34;none&#34; means no bias is added.</span>
+<span style="color:#75715e"># Instantiate a LoraConfig object with specific parameters</span>
+lora_config <span style="color:#f92672">=</span> LoraConfig(
+    r<span style="color:#f92672">=</span><span style="color:#ae81ff">32</span>,  <span style="color:#75715e"># The dimension of the low-rank decomposition. This parameter controls the trade-off between model capacity and efficiency.</span>
+    lora_alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">16</span>,  <span style="color:#75715e"># The scaling factor for the LoRA module. It is used to adjust the output of the low-rank decomposition.</span>
+    lora_dropout<span style="color:#f92672">=</span><span style="color:#ae81ff">0.5</span>,  <span style="color:#75715e"># The dropout rate applied to the LoRA layers to prevent overfitting. A higher value means more regularization.</span>
+    bias<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span>,  <span style="color:#75715e"># Specifies how to handle biases in the LoRA layers. &#34;none&#34; means no bias is added.</span>
     
-    <span style=color:#75715e># The target modules for the LoRA transformation. These are the specific layers in the model where the low-rank adaptation will be applied.</span>
-    <span style=color:#75715e># You could use &#39;q_proj&#39;, &#39;v_proj&#39;, and &#39;0_proj&#39; as well and comment out the rest if needed.</span>
-    target_modules<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#34;q_proj&#34;</span>, <span style=color:#e6db74>&#34;k_proj&#34;</span>, <span style=color:#e6db74>&#34;v_proj&#34;</span>, <span style=color:#e6db74>&#34;output_proj&#34;</span>],  
+    <span style="color:#75715e"># The target modules for the LoRA transformation. These are the specific layers in the model where the low-rank adaptation will be applied.</span>
+    <span style="color:#75715e"># You could use &#39;q_proj&#39;, &#39;v_proj&#39;, and &#39;0_proj&#39; as well and comment out the rest if needed.</span>
+    target_modules<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;q_proj&#34;</span>, <span style="color:#e6db74">&#34;k_proj&#34;</span>, <span style="color:#e6db74">&#34;v_proj&#34;</span>, <span style="color:#e6db74">&#34;output_proj&#34;</span>],  
     
-    task_type<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;CAUSAL_LM&#34;</span>  <span style=color:#75715e># Specifies the task type for which this configuration is being used. &#34;CAUSAL_LM&#34; stands for causal language modeling.</span>
+    task_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;CAUSAL_LM&#34;</span>  <span style="color:#75715e"># Specifies the task type for which this configuration is being used. &#34;CAUSAL_LM&#34; stands for causal language modeling.</span>
 )
 
-</code></pre></div><h3 id=step-7-load-and-prepare-the-model>Step 7: Load and Prepare the Model</h3>
+</code></pre></div><h3 id="step-7-load-and-prepare-the-model">Step 7: Load and Prepare the Model</h3>
 <p>In this step, we ensure the model is loaded and prepared for use on the appropriate device, either an Intel XPU or CPU, and configure it for efficient fine-tuningThis ensures the model and tokenizer are properly set up and optimized for use on the selected device, ready for efficient fine-tuning.
 This step ensures that the model and tokenizer are correctly set up and configured for use on the appropriate device, preparing them for the fine-tuning process.
 .</p>
@@ -338,139 +404,139 @@ This step ensures that the model and tokenizer are correctly set up and configur
 </ul>
 </li>
 </ol>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> os
-<span style=color:#f92672>import</span> torch
-<span style=color:#f92672>from</span> transformers <span style=color:#f92672>import</span> AutoTokenizer, AutoModelForCausalLM
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> os
+<span style="color:#f92672">import</span> torch
+<span style="color:#f92672">from</span> transformers <span style="color:#f92672">import</span> AutoTokenizer, AutoModelForCausalLM
 
-<span style=color:#75715e># Check if XPU is available and set the device accordingly</span>
-USE_CPU <span style=color:#f92672>=</span> <span style=color:#66d9ef>False</span>
-device <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;xpu:0&#34;</span> <span style=color:#66d9ef>if</span> torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>is_available() <span style=color:#f92672>and</span> <span style=color:#f92672>not</span> USE_CPU <span style=color:#66d9ef>else</span> <span style=color:#e6db74>&#34;cpu&#34;</span>
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Using device: </span><span style=color:#e6db74>{</span>device<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+<span style="color:#75715e"># Check if XPU is available and set the device accordingly</span>
+USE_CPU <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+device <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;xpu:0&#34;</span> <span style="color:#66d9ef">if</span> torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>is_available() <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> USE_CPU <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;cpu&#34;</span>
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Using device: </span><span style="color:#e6db74">{</span>device<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 
-<span style=color:#75715e># Specify the model name</span>
-model_name <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;meta-llama/Meta-Llama-3-8B-Instruct&#34;</span>
+<span style="color:#75715e"># Specify the model name</span>
+model_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;meta-llama/Meta-Llama-3-8B-Instruct&#34;</span>
 
-<span style=color:#75715e># Define a function to check if the model exists locally</span>
-<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>download_model_if_not_exist</span>(model_name):
-    model_dir <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>join(<span style=color:#e6db74>&#34;models&#34;</span>, model_name)
-    <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>exists(model_dir):
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Downloading model </span><span style=color:#e6db74>{</span>model_name<span style=color:#e6db74>}</span><span style=color:#e6db74>...&#34;</span>)
-        tokenizer <span style=color:#f92672>=</span> AutoTokenizer<span style=color:#f92672>.</span>from_pretrained(model_name)
-        model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(model_name)
-        tokenizer<span style=color:#f92672>.</span>save_pretrained(model_dir)
-        model<span style=color:#f92672>.</span>save_pretrained(model_dir)
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Model </span><span style=color:#e6db74>{</span>model_name<span style=color:#e6db74>}</span><span style=color:#e6db74> downloaded and saved locally.&#34;</span>)
-    <span style=color:#66d9ef>else</span>:
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Model </span><span style=color:#e6db74>{</span>model_name<span style=color:#e6db74>}</span><span style=color:#e6db74> already exists locally.&#34;</span>)
-    <span style=color:#66d9ef>return</span> model_dir
+<span style="color:#75715e"># Define a function to check if the model exists locally</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">download_model_if_not_exist</span>(model_name):
+    model_dir <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#34;models&#34;</span>, model_name)
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>exists(model_dir):
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Downloading model </span><span style="color:#e6db74">{</span>model_name<span style="color:#e6db74">}</span><span style="color:#e6db74">...&#34;</span>)
+        tokenizer <span style="color:#f92672">=</span> AutoTokenizer<span style="color:#f92672">.</span>from_pretrained(model_name)
+        model <span style="color:#f92672">=</span> AutoModelForCausalLM<span style="color:#f92672">.</span>from_pretrained(model_name)
+        tokenizer<span style="color:#f92672">.</span>save_pretrained(model_dir)
+        model<span style="color:#f92672">.</span>save_pretrained(model_dir)
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Model </span><span style="color:#e6db74">{</span>model_name<span style="color:#e6db74">}</span><span style="color:#e6db74"> downloaded and saved locally.&#34;</span>)
+    <span style="color:#66d9ef">else</span>:
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Model </span><span style="color:#e6db74">{</span>model_name<span style="color:#e6db74">}</span><span style="color:#e6db74"> already exists locally.&#34;</span>)
+    <span style="color:#66d9ef">return</span> model_dir
 
-<span style=color:#75715e># Call the function to download the model if it doesn&#39;t exist</span>
-model_dir <span style=color:#f92672>=</span> download_model_if_not_exist(model_name)
+<span style="color:#75715e"># Call the function to download the model if it doesn&#39;t exist</span>
+model_dir <span style="color:#f92672">=</span> download_model_if_not_exist(model_name)
 
-<span style=color:#75715e># Load the model and tokenizer from the local directory</span>
-tokenizer <span style=color:#f92672>=</span> AutoTokenizer<span style=color:#f92672>.</span>from_pretrained(model_dir)
-model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(model_dir)
+<span style="color:#75715e"># Load the model and tokenizer from the local directory</span>
+tokenizer <span style="color:#f92672">=</span> AutoTokenizer<span style="color:#f92672">.</span>from_pretrained(model_dir)
+model <span style="color:#f92672">=</span> AutoModelForCausalLM<span style="color:#f92672">.</span>from_pretrained(model_dir)
 
-<span style=color:#75715e># Set the padding token and padding side</span>
-tokenizer<span style=color:#f92672>.</span>pad_token <span style=color:#f92672>=</span> tokenizer<span style=color:#f92672>.</span>eos_token
-tokenizer<span style=color:#f92672>.</span>padding_side <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;right&#34;</span>
+<span style="color:#75715e"># Set the padding token and padding side</span>
+tokenizer<span style="color:#f92672">.</span>pad_token <span style="color:#f92672">=</span> tokenizer<span style="color:#f92672">.</span>eos_token
+tokenizer<span style="color:#f92672">.</span>padding_side <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;right&#34;</span>
 
-<span style=color:#75715e># Resize the model embeddings to account for the new special tokens</span>
-model<span style=color:#f92672>.</span>resize_token_embeddings(len(tokenizer))
+<span style="color:#75715e"># Resize the model embeddings to account for the new special tokens</span>
+model<span style="color:#f92672">.</span>resize_token_embeddings(len(tokenizer))
 
-<span style=color:#75715e># Set the padding token ID for generation configuration</span>
-model<span style=color:#f92672>.</span>generation_config<span style=color:#f92672>.</span>pad_token_id <span style=color:#f92672>=</span> tokenizer<span style=color:#f92672>.</span>pad_token_id
+<span style="color:#75715e"># Set the padding token ID for generation configuration</span>
+model<span style="color:#f92672">.</span>generation_config<span style="color:#f92672">.</span>pad_token_id <span style="color:#f92672">=</span> tokenizer<span style="color:#f92672">.</span>pad_token_id
 
-<span style=color:#75715e># Move the model to the appropriate device</span>
-model<span style=color:#f92672>.</span>to(device)
+<span style="color:#75715e"># Move the model to the appropriate device</span>
+model<span style="color:#f92672">.</span>to(device)
 
-<span style=color:#75715e># Disable caching mechanism to reduce memory usage during fine-tuning</span>
-model<span style=color:#f92672>.</span>config<span style=color:#f92672>.</span>use_cache <span style=color:#f92672>=</span> <span style=color:#66d9ef>False</span>
+<span style="color:#75715e"># Disable caching mechanism to reduce memory usage during fine-tuning</span>
+model<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>use_cache <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
 
-<span style=color:#75715e># Configure the model&#39;s pre-training tensor parallelism degree</span>
-model<span style=color:#f92672>.</span>config<span style=color:#f92672>.</span>pretraining_tp <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
+<span style="color:#75715e"># Configure the model&#39;s pre-training tensor parallelism degree</span>
+model<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>pretraining_tp <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
 
-print(<span style=color:#e6db74>&#34;Model and tokenizer are ready for use.&#34;</span>)
+print(<span style="color:#e6db74">&#34;Model and tokenizer are ready for use.&#34;</span>)
 
 
-</code></pre></div><h3 id=step-8-testing-the-model>Step 8: Testing the Model</h3>
+</code></pre></div><h3 id="step-8-testing-the-model">Step 8: Testing the Model</h3>
 <p>Before starting the fine-tuning process, let&rsquo;s evaluate the LLaMa3 model on a sample input to observe its initial performance. We&rsquo;ll generate responses for a few questions from the <code>test_inputs</code> list belo🌿</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
 
-<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>generate_response</span>(model, prompt):
-    <span style=color:#e6db74>&#34;&#34;&#34;
-</span><span style=color:#e6db74>    Generate a response from the model given a prompt.
-</span><span style=color:#e6db74>
-</span><span style=color:#e6db74>    Args:
-</span><span style=color:#e6db74>        model: The language model to use for generating the response.
-</span><span style=color:#e6db74>        prompt (str): The input prompt to generate a response for.
-</span><span style=color:#e6db74>
-</span><span style=color:#e6db74>    Returns:
-</span><span style=color:#e6db74>        str: The generated response as a string.
-</span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
-    <span style=color:#75715e># Tokenize the input prompt and move it to the specified device</span>
-    input_ids <span style=color:#f92672>=</span> tokenizer(prompt, return_tensors<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;pt&#34;</span>)<span style=color:#f92672>.</span>input_ids<span style=color:#f92672>.</span>to(device)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_response</span>(model, prompt):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    Generate a response from the model given a prompt.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    Args:
+</span><span style="color:#e6db74">        model: The language model to use for generating the response.
+</span><span style="color:#e6db74">        prompt (str): The input prompt to generate a response for.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    Returns:
+</span><span style="color:#e6db74">        str: The generated response as a string.
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#75715e"># Tokenize the input prompt and move it to the specified device</span>
+    input_ids <span style="color:#f92672">=</span> tokenizer(prompt, return_tensors<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pt&#34;</span>)<span style="color:#f92672">.</span>input_ids<span style="color:#f92672">.</span>to(device)
     
-    <span style=color:#75715e># Generate a response from the model</span>
-    outputs <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>generate(input_ids, max_new_tokens<span style=color:#f92672>=</span><span style=color:#ae81ff>100</span>, 
-                             eos_token_id<span style=color:#f92672>=</span>tokenizer<span style=color:#f92672>.</span>eos_token_id)
+    <span style="color:#75715e"># Generate a response from the model</span>
+    outputs <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>generate(input_ids, max_new_tokens<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>, 
+                             eos_token_id<span style="color:#f92672">=</span>tokenizer<span style="color:#f92672">.</span>eos_token_id)
     
-    <span style=color:#75715e># Decode the generated tokens and return the response as a string</span>
-    <span style=color:#66d9ef>return</span> tokenizer<span style=color:#f92672>.</span>decode(outputs[<span style=color:#ae81ff>0</span>], skip_special_tokens<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+    <span style="color:#75715e"># Decode the generated tokens and return the response as a string</span>
+    <span style="color:#66d9ef">return</span> tokenizer<span style="color:#f92672">.</span>decode(outputs[<span style="color:#ae81ff">0</span>], skip_special_tokens<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 
-<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>test_model</span>(model, test_inputs):
-    <span style=color:#e6db74>&#34;&#34;&#34;
-</span><span style=color:#e6db74>    Quickly test the model using a set of test queries.
-</span><span style=color:#e6db74>
-</span><span style=color:#e6db74>    Args:
-</span><span style=color:#e6db74>        model: The language model to test.
-</span><span style=color:#e6db74>        test_inputs (list of str): A list of input prompts to test the model with.
-</span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
-    <span style=color:#75715e># Iterate over each test input</span>
-    <span style=color:#66d9ef>for</span> input_text <span style=color:#f92672>in</span> test_inputs:
-        print(<span style=color:#e6db74>&#34;__&#34;</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>50</span>)
-        <span style=color:#75715e># Generate a response for the input prompt</span>
-        generated_response <span style=color:#f92672>=</span> generate_response(model, input_text)
-        <span style=color:#75715e># Print the input prompt and the generated response</span>
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Input: </span><span style=color:#e6db74>{</span>input_text<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Generated Answer: </span><span style=color:#e6db74>{</span>generated_response<span style=color:#e6db74>}</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>)
-        print(<span style=color:#e6db74>&#34;__&#34;</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>50</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_model</span>(model, test_inputs):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    Quickly test the model using a set of test queries.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    Args:
+</span><span style="color:#e6db74">        model: The language model to test.
+</span><span style="color:#e6db74">        test_inputs (list of str): A list of input prompts to test the model with.
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#75715e"># Iterate over each test input</span>
+    <span style="color:#66d9ef">for</span> input_text <span style="color:#f92672">in</span> test_inputs:
+        print(<span style="color:#e6db74">&#34;__&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">50</span>)
+        <span style="color:#75715e"># Generate a response for the input prompt</span>
+        generated_response <span style="color:#f92672">=</span> generate_response(model, input_text)
+        <span style="color:#75715e"># Print the input prompt and the generated response</span>
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Input: </span><span style="color:#e6db74">{</span>input_text<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Generated Answer: </span><span style="color:#e6db74">{</span>generated_response<span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+        print(<span style="color:#e6db74">&#34;__&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">50</span>)
 
-<span style=color:#75715e># Define a list of test input prompts to evaluate the model</span>
-test_inputs <span style=color:#f92672>=</span> [
-    <span style=color:#e6db74>&#34;How do I check the status of the RAID array on my DGX system?&#34;</span>,
-    <span style=color:#e6db74>&#34;Can you show me how to get detailed information about the RAID configuration on my DGX?&#34;</span>,
-    <span style=color:#e6db74>&#34;How can I allow a user to access Docker on the DGX?&#34;</span>
+<span style="color:#75715e"># Define a list of test input prompts to evaluate the model</span>
+test_inputs <span style="color:#f92672">=</span> [
+    <span style="color:#e6db74">&#34;How do I check the status of the RAID array on my DGX system?&#34;</span>,
+    <span style="color:#e6db74">&#34;Can you show me how to get detailed information about the RAID configuration on my DGX?&#34;</span>,
+    <span style="color:#e6db74">&#34;How can I allow a user to access Docker on the DGX?&#34;</span>
 ]
 
-<span style=color:#75715e># Print a message indicating the start of model testing</span>
-print(<span style=color:#e6db74>&#34;Testing the model before fine-tuning:&#34;</span>)
-<span style=color:#75715e># Test the model with the defined test inputs</span>
+<span style="color:#75715e"># Print a message indicating the start of model testing</span>
+print(<span style="color:#e6db74">&#34;Testing the model before fine-tuning:&#34;</span>)
+<span style="color:#75715e"># Test the model with the defined test inputs</span>
 test_model(model, test_inputs)
 
-</code></pre></div><h3 id=step-9-load-and-inspect-the-dataset->Step 9: Load and Inspect the Dataset 📊</h3>
+</code></pre></div><h3 id="step-9-load-and-inspect-the-dataset-">Step 9: Load and Inspect the Dataset 📊</h3>
 <p>Import the load_dataset function and load the specified dataset from the Hugging Face datasets library. In this case, the dataset identifier is RayBernard/nvidia-dgx-best-practices, and we are loading the training split of the dataset. Print the first instruction and response from the dataset to ensure the content is as expected. Next, print the total number of examples in the dataset to understand its size. List the fields (keys) present in the dataset to understand its structure. Finally, print the entire dataset to get an overview of its structure and contents.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> datasets <span style=color:#f92672>import</span> load_dataset
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> datasets <span style="color:#f92672">import</span> load_dataset
 
-<span style=color:#75715e># Load a specific dataset from the Hugging Face datasets library.</span>
-<span style=color:#75715e># &#39;RayBernard/nvidia-dgx-best-practices&#39; is the identifier for the dataset,</span>
-<span style=color:#75715e># and &#39;split=&#34;train&#34;&#39; specifies that we want the training split of the dataset.</span>
-dataset_name <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;RayBernard/nvidia-dgx-best-practices&#34;</span>
-dataset <span style=color:#f92672>=</span> load_dataset(dataset_name, split<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;train&#34;</span>)
+<span style="color:#75715e"># Load a specific dataset from the Hugging Face datasets library.</span>
+<span style="color:#75715e"># &#39;RayBernard/nvidia-dgx-best-practices&#39; is the identifier for the dataset,</span>
+<span style="color:#75715e"># and &#39;split=&#34;train&#34;&#39; specifies that we want the training split of the dataset.</span>
+dataset_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;RayBernard/nvidia-dgx-best-practices&#34;</span>
+dataset <span style="color:#f92672">=</span> load_dataset(dataset_name, split<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;train&#34;</span>)
 
-<span style=color:#75715e># Print the first instruction and response from the dataset to verify the content.</span>
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Instruction is: </span><span style=color:#e6db74>{</span>dataset[<span style=color:#ae81ff>0</span>][<span style=color:#e6db74>&#39;instruction&#39;</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Response is: </span><span style=color:#e6db74>{</span>dataset[<span style=color:#ae81ff>0</span>][<span style=color:#e6db74>&#39;output&#39;</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+<span style="color:#75715e"># Print the first instruction and response from the dataset to verify the content.</span>
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Instruction is: </span><span style="color:#e6db74">{</span>dataset[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;instruction&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Response is: </span><span style="color:#e6db74">{</span>dataset[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;output&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 
-<span style=color:#75715e># Print the number of examples in the dataset.</span>
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Number of examples in the dataset: </span><span style=color:#e6db74>{</span>len(dataset)<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+<span style="color:#75715e"># Print the number of examples in the dataset.</span>
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Number of examples in the dataset: </span><span style="color:#e6db74">{</span>len(dataset)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 
-<span style=color:#75715e># Print the fields (keys) present in the dataset.</span>
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Fields in the dataset: </span><span style=color:#e6db74>{</span>list(dataset<span style=color:#f92672>.</span>features<span style=color:#f92672>.</span>keys())<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+<span style="color:#75715e"># Print the fields (keys) present in the dataset.</span>
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Fields in the dataset: </span><span style="color:#e6db74">{</span>list(dataset<span style="color:#f92672">.</span>features<span style="color:#f92672">.</span>keys())<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 
-<span style=color:#75715e># Print the entire dataset to get an overview of its structure and contents.</span>
+<span style="color:#75715e"># Print the entire dataset to get an overview of its structure and contents.</span>
 print(dataset)
-</code></pre></div><h3 id=step-10-format-and-split-the-dataset-for-training>Step 10: Format and Split the Dataset for Training</h3>
+</code></pre></div><h3 id="step-10-format-and-split-the-dataset-for-training">Step 10: Format and Split the Dataset for Training</h3>
 <p>This step ensures your dataset is properly formatted and split for the training process, making it ready for fine-tuning.</p>
 <ol>
 <li>
@@ -508,89 +574,89 @@ print(dataset)
 </li>
 </ol>
 <p>This process ensures that your dataset is well-organized and ready for the training phase, enhancing the model&rsquo;s performance during fine-tuning.`tuning phase.e.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># Load the dataset with the specified name and split</span>
-<span style=color:#75715e># Here, we are loading the &#34;train&#34; split of the dataset</span>
-dataset <span style=color:#f92672>=</span> load_dataset(dataset_name, split<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;train&#34;</span>)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Load the dataset with the specified name and split</span>
+<span style="color:#75715e"># Here, we are loading the &#34;train&#34; split of the dataset</span>
+dataset <span style="color:#f92672">=</span> load_dataset(dataset_name, split<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;train&#34;</span>)
 
-<span style=color:#75715e># Define the system message separately</span>
-system_message <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;You are a helpful  linux configuration  AI, who only responds with commands used to execuite over SSH. you are to think step by step on what they are, since your job depends on it.  Format the to be place in an  ssh session&#34;</span>
+<span style="color:#75715e"># Define the system message separately</span>
+system_message <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;You are a helpful  linux configuration  AI, who only responds with commands used to execuite over SSH. you are to think step by step on what they are, since your job depends on it.  Format the to be place in an  ssh session&#34;</span>
 
-<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>format_prompts</span>(batch, system_msg):
-    <span style=color:#e6db74>&#34;&#34;&#34;
-</span><span style=color:#e6db74>    Format the prompts according to the Meta Llama 3 Instruct prompt template with special tokens.
-</span><span style=color:#e6db74>
-</span><span style=color:#e6db74>    Args:
-</span><span style=color:#e6db74>        batch (dict): A batch of data containing &#39;instruction&#39; and &#39;output&#39; fields.
-</span><span style=color:#e6db74>        system_msg (str): The system message to be included in the prompt.
-</span><span style=color:#e6db74>
-</span><span style=color:#e6db74>    Returns:
-</span><span style=color:#e6db74>        dict: A dictionary containing the formatted prompts under the &#39;text&#39; key.
-</span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
-    <span style=color:#75715e># Initialize an empty list to store the formatted prompts</span>
-    formatted_prompts <span style=color:#f92672>=</span> []
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">format_prompts</span>(batch, system_msg):
+    <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">    Format the prompts according to the Meta Llama 3 Instruct prompt template with special tokens.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    Args:
+</span><span style="color:#e6db74">        batch (dict): A batch of data containing &#39;instruction&#39; and &#39;output&#39; fields.
+</span><span style="color:#e6db74">        system_msg (str): The system message to be included in the prompt.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    Returns:
+</span><span style="color:#e6db74">        dict: A dictionary containing the formatted prompts under the &#39;text&#39; key.
+</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+    <span style="color:#75715e"># Initialize an empty list to store the formatted prompts</span>
+    formatted_prompts <span style="color:#f92672">=</span> []
 
-    <span style=color:#75715e># Iterate over the &#39;instruction&#39; and &#39;output&#39; fields in the batch</span>
-    <span style=color:#66d9ef>for</span> instruction, output <span style=color:#f92672>in</span> zip(batch[<span style=color:#e6db74>&#34;instruction&#34;</span>], batch[<span style=color:#e6db74>&#34;output&#34;</span>]):
-        <span style=color:#75715e># Format the prompt according to the Meta Llama 3 Instruct template with special tokens</span>
-        prompt <span style=color:#f92672>=</span> (
-            <span style=color:#e6db74>&#34;&lt;|startoftext|&gt;system</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-            <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>system_msg<span style=color:#e6db74>}</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-            <span style=color:#e6db74>&#34;&lt;|endoftext|&gt;user</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-            <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>instruction<span style=color:#e6db74>}</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-            <span style=color:#e6db74>&#34;&lt;|endoftext|&gt;assistant</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-            <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>output<span style=color:#e6db74>}</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-            <span style=color:#e6db74>&#34;&lt;|endoftext|&gt;&#34;</span>
+    <span style="color:#75715e"># Iterate over the &#39;instruction&#39; and &#39;output&#39; fields in the batch</span>
+    <span style="color:#66d9ef">for</span> instruction, output <span style="color:#f92672">in</span> zip(batch[<span style="color:#e6db74">&#34;instruction&#34;</span>], batch[<span style="color:#e6db74">&#34;output&#34;</span>]):
+        <span style="color:#75715e"># Format the prompt according to the Meta Llama 3 Instruct template with special tokens</span>
+        prompt <span style="color:#f92672">=</span> (
+            <span style="color:#e6db74">&#34;&lt;|startoftext|&gt;system</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>system_msg<span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+            <span style="color:#e6db74">&#34;&lt;|endoftext|&gt;user</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>instruction<span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+            <span style="color:#e6db74">&#34;&lt;|endoftext|&gt;assistant</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+            <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>output<span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+            <span style="color:#e6db74">&#34;&lt;|endoftext|&gt;&#34;</span>
         )
-        <span style=color:#75715e># Append the formatted prompt to the list</span>
-        formatted_prompts<span style=color:#f92672>.</span>append(prompt)
+        <span style="color:#75715e"># Append the formatted prompt to the list</span>
+        formatted_prompts<span style="color:#f92672">.</span>append(prompt)
 
-    <span style=color:#75715e># Return the formatted prompts as a dictionary with the key &#39;text&#39;</span>
-    <span style=color:#66d9ef>return</span> {<span style=color:#e6db74>&#34;text&#34;</span>: formatted_prompts}
+    <span style="color:#75715e"># Return the formatted prompts as a dictionary with the key &#39;text&#39;</span>
+    <span style="color:#66d9ef">return</span> {<span style="color:#e6db74">&#34;text&#34;</span>: formatted_prompts}
 
-<span style=color:#75715e># Apply the format_prompts function to the dataset</span>
-<span style=color:#75715e># The function is applied in a batched manner to speed up processing</span>
-formatted_dataset <span style=color:#f92672>=</span> dataset<span style=color:#f92672>.</span>map(<span style=color:#66d9ef>lambda</span> batch: format_prompts(batch, system_message), batched<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+<span style="color:#75715e"># Apply the format_prompts function to the dataset</span>
+<span style="color:#75715e"># The function is applied in a batched manner to speed up processing</span>
+formatted_dataset <span style="color:#f92672">=</span> dataset<span style="color:#f92672">.</span>map(<span style="color:#66d9ef">lambda</span> batch: format_prompts(batch, system_message), batched<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 
-<span style=color:#75715e># Split the dataset into training and validation sets</span>
-<span style=color:#75715e># 20% of the data is used for validation, and a seed is set for reproducibility</span>
-split_dataset <span style=color:#f92672>=</span> formatted_dataset<span style=color:#f92672>.</span>train_test_split(test_size<span style=color:#f92672>=</span><span style=color:#ae81ff>0.2</span>, seed<span style=color:#f92672>=</span><span style=color:#ae81ff>99</span>)
-train_dataset <span style=color:#f92672>=</span> split_dataset[<span style=color:#e6db74>&#34;train&#34;</span>]
-validation_dataset <span style=color:#f92672>=</span> split_dataset[<span style=color:#e6db74>&#34;test&#34;</span>]
-print(<span style=color:#e6db74>&#34;train dataset == &#34;</span>,train_dataset)
-print(<span style=color:#e6db74>&#34;validation dataset ==&#34;</span>, validation_dataset)
-<span style=color:#75715e># Print the number of examples in the training and validation sets</span>
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Number of examples in the training set: </span><span style=color:#e6db74>{</span>len(train_dataset)<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Number of examples in the validation set: </span><span style=color:#e6db74>{</span>len(validation_dataset)<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+<span style="color:#75715e"># Split the dataset into training and validation sets</span>
+<span style="color:#75715e"># 20% of the data is used for validation, and a seed is set for reproducibility</span>
+split_dataset <span style="color:#f92672">=</span> formatted_dataset<span style="color:#f92672">.</span>train_test_split(test_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>, seed<span style="color:#f92672">=</span><span style="color:#ae81ff">99</span>)
+train_dataset <span style="color:#f92672">=</span> split_dataset[<span style="color:#e6db74">&#34;train&#34;</span>]
+validation_dataset <span style="color:#f92672">=</span> split_dataset[<span style="color:#e6db74">&#34;test&#34;</span>]
+print(<span style="color:#e6db74">&#34;train dataset == &#34;</span>,train_dataset)
+print(<span style="color:#e6db74">&#34;validation dataset ==&#34;</span>, validation_dataset)
+<span style="color:#75715e"># Print the number of examples in the training and validation sets</span>
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Number of examples in the training set: </span><span style="color:#e6db74">{</span>len(train_dataset)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Number of examples in the validation set: </span><span style="color:#e6db74">{</span>len(validation_dataset)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 
-<span style=color:#75715e># Function to show what the prompt looks like for the first record with the system message</span>
-<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>show_first_prompt</span>(system_msg):
-    <span style=color:#75715e># Get the first record from the dataset</span>
-    first_instruction <span style=color:#f92672>=</span> dataset[<span style=color:#e6db74>&#34;instruction&#34;</span>][<span style=color:#ae81ff>0</span>]
-    first_output <span style=color:#f92672>=</span> dataset[<span style=color:#e6db74>&#34;output&#34;</span>][<span style=color:#ae81ff>0</span>]
+<span style="color:#75715e"># Function to show what the prompt looks like for the first record with the system message</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">show_first_prompt</span>(system_msg):
+    <span style="color:#75715e"># Get the first record from the dataset</span>
+    first_instruction <span style="color:#f92672">=</span> dataset[<span style="color:#e6db74">&#34;instruction&#34;</span>][<span style="color:#ae81ff">0</span>]
+    first_output <span style="color:#f92672">=</span> dataset[<span style="color:#e6db74">&#34;output&#34;</span>][<span style="color:#ae81ff">0</span>]
     
-    <span style=color:#75715e># Format the first record using the provided system message</span>
-    prompt <span style=color:#f92672>=</span> (
-        <span style=color:#e6db74>&#34;&lt;|startoftext|&gt;system</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-        <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>system_msg<span style=color:#e6db74>}</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-        <span style=color:#e6db74>&#34;&lt;|endoftext|&gt;user</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-        <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>first_instruction<span style=color:#e6db74>}</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-        <span style=color:#e6db74>&#34;&lt;|endoftext|&gt;assistant</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-        <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>first_output<span style=color:#e6db74>}</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
-        <span style=color:#e6db74>&#34;&lt;|endoftext|&gt;&#34;</span>
+    <span style="color:#75715e"># Format the first record using the provided system message</span>
+    prompt <span style="color:#f92672">=</span> (
+        <span style="color:#e6db74">&#34;&lt;|startoftext|&gt;system</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>system_msg<span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+        <span style="color:#e6db74">&#34;&lt;|endoftext|&gt;user</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>first_instruction<span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+        <span style="color:#e6db74">&#34;&lt;|endoftext|&gt;assistant</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>first_output<span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+        <span style="color:#e6db74">&#34;&lt;|endoftext|&gt;&#34;</span>
     )
     
-    <span style=color:#75715e># Print the original instruction and output</span>
-    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Original instruction: </span><span style=color:#e6db74>{</span>first_instruction<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Original output: </span><span style=color:#e6db74>{</span>first_output<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+    <span style="color:#75715e"># Print the original instruction and output</span>
+    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Original instruction: </span><span style="color:#e6db74">{</span>first_instruction<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Original output: </span><span style="color:#e6db74">{</span>first_output<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
     
-    <span style=color:#75715e># Print the formatted prompt</span>
-    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>Formatted prompt with system message:</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>{</span>prompt<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+    <span style="color:#75715e"># Print the formatted prompt</span>
+    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Formatted prompt with system message:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">{</span>prompt<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 
-<span style=color:#75715e># Show what the prompt looks like for the first record with the system message</span>
+<span style="color:#75715e"># Show what the prompt looks like for the first record with the system message</span>
 show_first_prompt(system_message)
 
 
-</code></pre></div><h3 id=step-11-fine-tune-the-model-and-save-the-results>Step 11: Fine-Tune the Model and Save the Results</h3>
+</code></pre></div><h3 id="step-11-fine-tune-the-model-and-save-the-results">Step 11: Fine-Tune the Model and Save the Results</h3>
 <ol>
 <li>
 <p><strong>Setup Imports and Configurations</strong>:</p>
@@ -652,123 +718,123 @@ show_first_prompt(system_message)
 </li>
 </ol>
 <p>This step-by-step approach ensures that the model is properly fine-tuned and ready for deployment, with optimal performance configurations and comprehensive logging for tracking progress.e use.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> os
-<span style=color:#f92672>import</span> torch
-<span style=color:#f92672>import</span> transformers
-<span style=color:#f92672>import</span> wandb
-<span style=color:#f92672>from</span> datasets <span style=color:#f92672>import</span> load_dataset
-<span style=color:#f92672>from</span> transformers <span style=color:#f92672>import</span> AutoTokenizer, AutoModelForCausalLM, TrainingArguments
-<span style=color:#f92672>from</span> trl <span style=color:#f92672>import</span> SFTTrainer
-<span style=color:#f92672>from</span> peft <span style=color:#f92672>import</span> LoraConfig, get_peft_model
-<span style=color:#f92672>import</span> intel_extension_for_pytorch <span style=color:#66d9ef>as</span> ipex
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> os
+<span style="color:#f92672">import</span> torch
+<span style="color:#f92672">import</span> transformers
+<span style="color:#f92672">import</span> wandb
+<span style="color:#f92672">from</span> datasets <span style="color:#f92672">import</span> load_dataset
+<span style="color:#f92672">from</span> transformers <span style="color:#f92672">import</span> AutoTokenizer, AutoModelForCausalLM, TrainingArguments
+<span style="color:#f92672">from</span> trl <span style="color:#f92672">import</span> SFTTrainer
+<span style="color:#f92672">from</span> peft <span style="color:#f92672">import</span> LoraConfig, get_peft_model
+<span style="color:#f92672">import</span> intel_extension_for_pytorch <span style="color:#66d9ef">as</span> ipex
 
-print(<span style=color:#e6db74>&#34;Torch version:&#34;</span>, torch<span style=color:#f92672>.</span>__version__)
-print(<span style=color:#e6db74>&#34;IPEX version:&#34;</span>, ipex<span style=color:#f92672>.</span>__version__)
+print(<span style="color:#e6db74">&#34;Torch version:&#34;</span>, torch<span style="color:#f92672">.</span>__version__)
+print(<span style="color:#e6db74">&#34;IPEX version:&#34;</span>, ipex<span style="color:#f92672">.</span>__version__)
 
-<span style=color:#75715e># Check if Intel XPU is available</span>
-<span style=color:#66d9ef>if</span> torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>is_available():
-    print(<span style=color:#e6db74>&#34;Intel XPU is available&#34;</span>)
-    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>device_count()):
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;XPU Device </span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74>: </span><span style=color:#e6db74>{</span>torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>get_device_name(i)<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
-<span style=color:#66d9ef>else</span>:
-    print(<span style=color:#e6db74>&#34;Intel XPU is not available&#34;</span>)
+<span style="color:#75715e"># Check if Intel XPU is available</span>
+<span style="color:#66d9ef">if</span> torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>is_available():
+    print(<span style="color:#e6db74">&#34;Intel XPU is available&#34;</span>)
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>device_count()):
+        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;XPU Device </span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">: </span><span style="color:#e6db74">{</span>torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>get_device_name(i)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">else</span>:
+    print(<span style="color:#e6db74">&#34;Intel XPU is not available&#34;</span>)
 
-<span style=color:#75715e># Set the device to XPU if available, else fallback to CPU</span>
-device <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>device(<span style=color:#e6db74>&#34;xpu:0&#34;</span> <span style=color:#66d9ef>if</span> torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>is_available() <span style=color:#66d9ef>else</span> <span style=color:#e6db74>&#34;cpu&#34;</span>)
+<span style="color:#75715e"># Set the device to XPU if available, else fallback to CPU</span>
+device <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>device(<span style="color:#e6db74">&#34;xpu:0&#34;</span> <span style="color:#66d9ef">if</span> torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>is_available() <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;cpu&#34;</span>)
 
-<span style=color:#75715e># Load model and tokenizer from the specified path</span>
-model_path <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;Training/AI/GenAI/models/meta-llama/Meta-Llama-3-8B-Instruct&#34;</span> <span style=color:#75715e>#Model was download in Step 3</span>
-tokenizer <span style=color:#f92672>=</span> AutoTokenizer<span style=color:#f92672>.</span>from_pretrained(model_path)
-model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(model_path)
-model <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>to(device)  <span style=color:#75715e># Move the model to the selected device (XPU or CPU)</span>
+<span style="color:#75715e"># Load model and tokenizer from the specified path</span>
+model_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Training/AI/GenAI/models/meta-llama/Meta-Llama-3-8B-Instruct&#34;</span> <span style="color:#75715e">#Model was download in Step 3</span>
+tokenizer <span style="color:#f92672">=</span> AutoTokenizer<span style="color:#f92672">.</span>from_pretrained(model_path)
+model <span style="color:#f92672">=</span> AutoModelForCausalLM<span style="color:#f92672">.</span>from_pretrained(model_path)
+model <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>to(device)  <span style="color:#75715e"># Move the model to the selected device (XPU or CPU)</span>
 
-<span style=color:#75715e># Move the model&#39;s embedding layer to the same device</span>
-model<span style=color:#f92672>.</span>embed_tokens <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>get_input_embeddings()<span style=color:#f92672>.</span>to(device)
-<span style=color:#66d9ef>for</span> param <span style=color:#f92672>in</span> model<span style=color:#f92672>.</span>embed_tokens<span style=color:#f92672>.</span>parameters():
-    param<span style=color:#f92672>.</span>requires_grad <span style=color:#f92672>=</span> <span style=color:#66d9ef>True</span>  <span style=color:#75715e># Enable fine-tuning of word embeddings</span>
+<span style="color:#75715e"># Move the model&#39;s embedding layer to the same device</span>
+model<span style="color:#f92672">.</span>embed_tokens <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>get_input_embeddings()<span style="color:#f92672">.</span>to(device)
+<span style="color:#66d9ef">for</span> param <span style="color:#f92672">in</span> model<span style="color:#f92672">.</span>embed_tokens<span style="color:#f92672">.</span>parameters():
+    param<span style="color:#f92672">.</span>requires_grad <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>  <span style="color:#75715e"># Enable fine-tuning of word embeddings</span>
 
-<span style=color:#75715e># Set TOKENIZERS_PARALLELISM environment variable to avoid parallelism warning</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;TOKENIZERS_PARALLELISM&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;false&#34;</span>
+<span style="color:#75715e"># Set TOKENIZERS_PARALLELISM environment variable to avoid parallelism warning</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;TOKENIZERS_PARALLELISM&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;false&#34;</span>
 
-<span style=color:#75715e># Set other environment variables for logging and configuration</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;WANDB_PROJECT&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;llama3-8b-instruct-ft&#34;</span>  <span style=color:#75715e># Weights and Biases project name</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;WANDB_LOG_MODEL&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;checkpoint&#34;</span>  <span style=color:#75715e># Log model checkpoints to Weights and Biases</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#34;IPEX_TILE_AS_DEVICE&#34;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;1&#34;</span>  <span style=color:#75715e># Intel Extension for PyTorch setting for optimal performance</span>
+<span style="color:#75715e"># Set other environment variables for logging and configuration</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;WANDB_PROJECT&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;llama3-8b-instruct-ft&#34;</span>  <span style="color:#75715e"># Weights and Biases project name</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;WANDB_LOG_MODEL&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;checkpoint&#34;</span>  <span style="color:#75715e"># Log model checkpoints to Weights and Biases</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#34;IPEX_TILE_AS_DEVICE&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;1&#34;</span>  <span style="color:#75715e"># Intel Extension for PyTorch setting for optimal performance</span>
 
-<span style=color:#75715e># Configuration variables</span>
-finetuned_model_id <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;RayBernard/llama3-8b-instruct-ft&#34;</span>  <span style=color:#75715e># Model ID for the fine-tuned model</span>
-PUSH_TO_HUB <span style=color:#f92672>=</span> <span style=color:#66d9ef>True</span>  <span style=color:#75715e># Whether to push the model to the Hugging Face Hub</span>
-USE_WANDB <span style=color:#f92672>=</span> <span style=color:#66d9ef>True</span>  <span style=color:#75715e># Whether to use Weights and Biases for logging</span>
+<span style="color:#75715e"># Configuration variables</span>
+finetuned_model_id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;RayBernard/llama3-8b-instruct-ft&#34;</span>  <span style="color:#75715e"># Model ID for the fine-tuned model</span>
+PUSH_TO_HUB <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>  <span style="color:#75715e"># Whether to push the model to the Hugging Face Hub</span>
+USE_WANDB <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>  <span style="color:#75715e"># Whether to use Weights and Biases for logging</span>
 
-<span style=color:#75715e># Load datasets (assuming these are pre-defined)</span>
-train_dataset <span style=color:#f92672>=</span> load_dataset(<span style=color:#e6db74>&#39;train_dataset&#39;</span>)  <span style=color:#75715e># Path to the training dataset</span>
-validation_dataset <span style=color:#f92672>=</span> load_dataset(<span style=color:#e6db74>&#39;validation_dataset&#39;</span>)  <span style=color:#75715e># Path to the validation dataset</span>
+<span style="color:#75715e"># Load datasets (assuming these are pre-defined)</span>
+train_dataset <span style="color:#f92672">=</span> load_dataset(<span style="color:#e6db74">&#39;train_dataset&#39;</span>)  <span style="color:#75715e"># Path to the training dataset</span>
+validation_dataset <span style="color:#f92672">=</span> load_dataset(<span style="color:#e6db74">&#39;validation_dataset&#39;</span>)  <span style="color:#75715e"># Path to the validation dataset</span>
 
-<span style=color:#75715e># Training configuration</span>
-num_train_samples <span style=color:#f92672>=</span> len(train_dataset)  <span style=color:#75715e># Number of training samples</span>
-batch_size <span style=color:#f92672>=</span> <span style=color:#ae81ff>2</span>  <span style=color:#75715e># Per device batch size, reduced to fit memory</span>
-gradient_accumulation_steps <span style=color:#f92672>=</span> <span style=color:#ae81ff>8</span>  <span style=color:#75715e># Accumulate gradients over 8 steps to simulate a larger batch size</span>
-steps_per_epoch <span style=color:#f92672>=</span> num_train_samples <span style=color:#f92672>//</span> (batch_size <span style=color:#f92672>*</span> gradient_accumulation_steps)  <span style=color:#75715e># Steps per epoch</span>
-num_epochs <span style=color:#f92672>=</span> <span style=color:#ae81ff>16</span>  <span style=color:#75715e># Number of training epochs</span>
-max_steps <span style=color:#f92672>=</span> steps_per_epoch <span style=color:#f92672>*</span> num_epochs  <span style=color:#75715e># Total number of training steps</span>
-print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Finetuning for max number of steps: </span><span style=color:#e6db74>{</span>max_steps<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+<span style="color:#75715e"># Training configuration</span>
+num_train_samples <span style="color:#f92672">=</span> len(train_dataset)  <span style="color:#75715e"># Number of training samples</span>
+batch_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># Per device batch size, reduced to fit memory</span>
+gradient_accumulation_steps <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>  <span style="color:#75715e"># Accumulate gradients over 8 steps to simulate a larger batch size</span>
+steps_per_epoch <span style="color:#f92672">=</span> num_train_samples <span style="color:#f92672">//</span> (batch_size <span style="color:#f92672">*</span> gradient_accumulation_steps)  <span style="color:#75715e"># Steps per epoch</span>
+num_epochs <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span>  <span style="color:#75715e"># Number of training epochs</span>
+max_steps <span style="color:#f92672">=</span> steps_per_epoch <span style="color:#f92672">*</span> num_epochs  <span style="color:#75715e"># Total number of training steps</span>
+print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Finetuning for max number of steps: </span><span style="color:#e6db74">{</span>max_steps<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
 
-<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>print_training_summary</span>(results):
-    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Time: </span><span style=color:#e6db74>{</span>results<span style=color:#f92672>.</span>metrics[<span style=color:#e6db74>&#39;train_runtime&#39;</span>]<span style=color:#e6db74>:</span><span style=color:#e6db74> .2f</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)  <span style=color:#75715e># Print total training time</span>
-    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Samples/second: </span><span style=color:#e6db74>{</span>results<span style=color:#f92672>.</span>metrics[<span style=color:#e6db74>&#39;train_samples_per_second&#39;</span>]<span style=color:#e6db74>:</span><span style=color:#e6db74> .2f</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)  <span style=color:#75715e># Print training speed</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_training_summary</span>(results):
+    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Time: </span><span style="color:#e6db74">{</span>results<span style="color:#f92672">.</span>metrics[<span style="color:#e6db74">&#39;train_runtime&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74"> .2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)  <span style="color:#75715e"># Print total training time</span>
+    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Samples/second: </span><span style="color:#e6db74">{</span>results<span style="color:#f92672">.</span>metrics[<span style="color:#e6db74">&#39;train_samples_per_second&#39;</span>]<span style="color:#e6db74">:</span><span style="color:#e6db74"> .2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)  <span style="color:#75715e"># Print training speed</span>
 
-training_args <span style=color:#f92672>=</span> TrainingArguments(
-    per_device_train_batch_size<span style=color:#f92672>=</span>batch_size,  <span style=color:#75715e># Batch size per device (GPU or XPU)</span>
-    gradient_accumulation_steps<span style=color:#f92672>=</span>gradient_accumulation_steps,  <span style=color:#75715e># Gradient accumulation steps to save memory</span>
-    warmup_ratio<span style=color:#f92672>=</span><span style=color:#ae81ff>0.05</span>,  <span style=color:#75715e># Ratio of total steps for learning rate warmup to stabilize training</span>
-    max_steps<span style=color:#f92672>=</span>max_steps,  <span style=color:#75715e># Total number of training steps calculated from epochs and batch size</span>
-    learning_rate<span style=color:#f92672>=</span><span style=color:#ae81ff>3e-5</span>,  <span style=color:#75715e># Learning rate for the optimizer</span>
-    evaluation_strategy<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;steps&#34;</span>,  <span style=color:#75715e># Evaluation strategy to evaluate the model at regular steps</span>
-    save_steps<span style=color:#f92672>=</span><span style=color:#ae81ff>100</span>,  <span style=color:#75715e># Frequency (in steps) to save model checkpoints</span>
-    fp16<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>,  <span style=color:#75715e># Enable mixed precision training (16-bit floating point numbers) to save memory</span>
-    logging_steps<span style=color:#f92672>=</span><span style=color:#ae81ff>100</span>,  <span style=color:#75715e># Frequency (in steps) to log training metrics</span>
-    output_dir<span style=color:#f92672>=</span>finetuned_model_id,  <span style=color:#75715e># Directory to save the model and training outputs</span>
-    hub_model_id<span style=color:#f92672>=</span>finetuned_model_id <span style=color:#66d9ef>if</span> PUSH_TO_HUB <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>None</span>,  <span style=color:#75715e># Model ID for pushing to Hugging Face Hub</span>
-    report_to<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;wandb&#34;</span> <span style=color:#66d9ef>if</span> USE_WANDB <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>None</span>,  <span style=color:#75715e># Reporting to Weights and Biases for experiment tracking</span>
-    push_to_hub<span style=color:#f92672>=</span>PUSH_TO_HUB,  <span style=color:#75715e># Whether to push the model to the Hugging Face Hub</span>
-    max_grad_norm<span style=color:#f92672>=</span><span style=color:#ae81ff>0.6</span>,  <span style=color:#75715e># Max gradient norm for gradient clipping to prevent exploding gradients</span>
-    weight_decay<span style=color:#f92672>=</span><span style=color:#ae81ff>0.01</span>,  <span style=color:#75715e># Weight decay for regularization to prevent overfitting</span>
-    group_by_length<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>,  <span style=color:#75715e># Group sequences by length to improve training efficiency</span>
-    gradient_checkpointing<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>  <span style=color:#75715e># Enable gradient checkpointing to save memory by trading compute</span>
+training_args <span style="color:#f92672">=</span> TrainingArguments(
+    per_device_train_batch_size<span style="color:#f92672">=</span>batch_size,  <span style="color:#75715e"># Batch size per device (GPU or XPU)</span>
+    gradient_accumulation_steps<span style="color:#f92672">=</span>gradient_accumulation_steps,  <span style="color:#75715e"># Gradient accumulation steps to save memory</span>
+    warmup_ratio<span style="color:#f92672">=</span><span style="color:#ae81ff">0.05</span>,  <span style="color:#75715e"># Ratio of total steps for learning rate warmup to stabilize training</span>
+    max_steps<span style="color:#f92672">=</span>max_steps,  <span style="color:#75715e"># Total number of training steps calculated from epochs and batch size</span>
+    learning_rate<span style="color:#f92672">=</span><span style="color:#ae81ff">3e-5</span>,  <span style="color:#75715e"># Learning rate for the optimizer</span>
+    evaluation_strategy<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;steps&#34;</span>,  <span style="color:#75715e"># Evaluation strategy to evaluate the model at regular steps</span>
+    save_steps<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>,  <span style="color:#75715e"># Frequency (in steps) to save model checkpoints</span>
+    fp16<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,  <span style="color:#75715e"># Enable mixed precision training (16-bit floating point numbers) to save memory</span>
+    logging_steps<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>,  <span style="color:#75715e"># Frequency (in steps) to log training metrics</span>
+    output_dir<span style="color:#f92672">=</span>finetuned_model_id,  <span style="color:#75715e"># Directory to save the model and training outputs</span>
+    hub_model_id<span style="color:#f92672">=</span>finetuned_model_id <span style="color:#66d9ef">if</span> PUSH_TO_HUB <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>,  <span style="color:#75715e"># Model ID for pushing to Hugging Face Hub</span>
+    report_to<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;wandb&#34;</span> <span style="color:#66d9ef">if</span> USE_WANDB <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>,  <span style="color:#75715e"># Reporting to Weights and Biases for experiment tracking</span>
+    push_to_hub<span style="color:#f92672">=</span>PUSH_TO_HUB,  <span style="color:#75715e"># Whether to push the model to the Hugging Face Hub</span>
+    max_grad_norm<span style="color:#f92672">=</span><span style="color:#ae81ff">0.6</span>,  <span style="color:#75715e"># Max gradient norm for gradient clipping to prevent exploding gradients</span>
+    weight_decay<span style="color:#f92672">=</span><span style="color:#ae81ff">0.01</span>,  <span style="color:#75715e"># Weight decay for regularization to prevent overfitting</span>
+    group_by_length<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,  <span style="color:#75715e"># Group sequences by length to improve training efficiency</span>
+    gradient_checkpointing<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>  <span style="color:#75715e"># Enable gradient checkpointing to save memory by trading compute</span>
 )
 
-<span style=color:#75715e># Initialize the SFTTrainer with LoRA configuration</span>
-lora_config <span style=color:#f92672>=</span> LoraConfig()  <span style=color:#75715e># LoRA configuration (assumed to be defined)</span>
-trainer <span style=color:#f92672>=</span> SFTTrainer(
-    model<span style=color:#f92672>=</span>model,  <span style=color:#75715e># Model to train</span>
-    train_dataset<span style=color:#f92672>=</span>train_dataset,  <span style=color:#75715e># Training dataset</span>
-    eval_dataset<span style=color:#f92672>=</span>validation_dataset,  <span style=color:#75715e># Validation dataset</span>
-    tokenizer<span style=color:#f92672>=</span>tokenizer,  <span style=color:#75715e># Tokenizer</span>
-    args<span style=color:#f92672>=</span>training_args,  <span style=color:#75715e># Training arguments</span>
-    peft_config<span style=color:#f92672>=</span>lora_config,  <span style=color:#75715e># LoRA configuration</span>
-    dataset_text_field<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;text&#34;</span>,  <span style=color:#75715e># Field name in the dataset containing the text data</span>
-    max_seq_length<span style=color:#f92672>=</span><span style=color:#ae81ff>512</span>,  <span style=color:#75715e># Maximum sequence length for training</span>
-    packing<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>  <span style=color:#75715e># Enable sequence packing for efficiency</span>
+<span style="color:#75715e"># Initialize the SFTTrainer with LoRA configuration</span>
+lora_config <span style="color:#f92672">=</span> LoraConfig()  <span style="color:#75715e"># LoRA configuration (assumed to be defined)</span>
+trainer <span style="color:#f92672">=</span> SFTTrainer(
+    model<span style="color:#f92672">=</span>model,  <span style="color:#75715e"># Model to train</span>
+    train_dataset<span style="color:#f92672">=</span>train_dataset,  <span style="color:#75715e"># Training dataset</span>
+    eval_dataset<span style="color:#f92672">=</span>validation_dataset,  <span style="color:#75715e"># Validation dataset</span>
+    tokenizer<span style="color:#f92672">=</span>tokenizer,  <span style="color:#75715e"># Tokenizer</span>
+    args<span style="color:#f92672">=</span>training_args,  <span style="color:#75715e"># Training arguments</span>
+    peft_config<span style="color:#f92672">=</span>lora_config,  <span style="color:#75715e"># LoRA configuration</span>
+    dataset_text_field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text&#34;</span>,  <span style="color:#75715e"># Field name in the dataset containing the text data</span>
+    max_seq_length<span style="color:#f92672">=</span><span style="color:#ae81ff">512</span>,  <span style="color:#75715e"># Maximum sequence length for training</span>
+    packing<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>  <span style="color:#75715e"># Enable sequence packing for efficiency</span>
 )
 
-<span style=color:#66d9ef>try</span>:
-    <span style=color:#75715e># Clear XPU cache before starting the training</span>
-    torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>empty_cache()
+<span style="color:#66d9ef">try</span>:
+    <span style="color:#75715e"># Clear XPU cache before starting the training</span>
+    torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>empty_cache()
     
-    <span style=color:#75715e># Start training</span>
-    results <span style=color:#f92672>=</span> trainer<span style=color:#f92672>.</span>train()
+    <span style="color:#75715e"># Start training</span>
+    results <span style="color:#f92672">=</span> trainer<span style="color:#f92672">.</span>train()
     
-    <span style=color:#75715e># Print training summary</span>
+    <span style="color:#75715e"># Print training summary</span>
     print_training_summary(results)
-    wandb<span style=color:#f92672>.</span>finish()  <span style=color:#75715e># Finish the wandb run</span>
-<span style=color:#66d9ef>except</span> <span style=color:#a6e22e>Exception</span> <span style=color:#66d9ef>as</span> e:
-    print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Error during training: </span><span style=color:#e6db74>{</span>e<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)  <span style=color:#75715e># Print any errors that occur during training</span>
+    wandb<span style="color:#f92672">.</span>finish()  <span style="color:#75715e"># Finish the wandb run</span>
+<span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Error during training: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)  <span style="color:#75715e"># Print any errors that occur during training</span>
 
-<span style=color:#75715e># Save the fine-tuned LoRA model</span>
-tuned_lora_model <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;llama3-8b-instruct-ftuned&#34;</span>
-trainer<span style=color:#f92672>.</span>model<span style=color:#f92672>.</span>save_pretrained(tuned_lora_model)  <span style=color:#75715e># Save the trained model to the specified path</span>
+<span style="color:#75715e"># Save the fine-tuned LoRA model</span>
+tuned_lora_model <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;llama3-8b-instruct-ftuned&#34;</span>
+trainer<span style="color:#f92672">.</span>model<span style="color:#f92672">.</span>save_pretrained(tuned_lora_model)  <span style="color:#75715e"># Save the trained model to the specified path</span>
 
-</code></pre></div><h3 id=step-12-merge-and-save-the-fine-tuned-model>Step 12: Merge and Save the Fine-Tuned Model</h3>
+</code></pre></div><h3 id="step-12-merge-and-save-the-fine-tuned-model">Step 12: Merge and Save the Fine-Tuned Model</h3>
 <p>After fine-tuning the model, merge the fine-tuned LoRA model with the base model and save the final tuned model. This process ensures that the fine-tuning adjustments are integrated into the base model, resulting in an optimized and ready-to-use model.</p>
 <ol>
 <li><strong>Import Required Libraries</strong>: Import the necessary libraries from <code>peft</code> and <code>transformers</code>.</li>
@@ -778,7 +844,7 @@ trainer<span style=color:#f92672>.</span>model<span style=color:#f92672>.</span>
 <li><strong>Save the Final Model</strong>: Save the final merged model to the specified path for future use.</li>
 </ol>
 <p>This step finalizes the training process by producing a single, fine-tuned model ready for del.save_pretrained(tunmodel)</p>
-<pre tabindex=0><code>
+<pre tabindex="0"><code>
 
 ```python
 from peft import PeftModel
@@ -798,7 +864,7 @@ model = model.merge_and_unload()
 # save final tuned model
 model.save_pretrained(tuned_model)
 
-</code></pre><h3 id=step-13-upload-the-fine-tuned-model-to-hugging-face-hub->Step 13: Upload the Fine-Tuned Model to Hugging Face Hub 🚀</h3>
+</code></pre><h3 id="step-13-upload-the-fine-tuned-model-to-hugging-face-hub-">Step 13: Upload the Fine-Tuned Model to Hugging Face Hub 🚀</h3>
 <ol>
 <li>
 <p><strong>Install Necessary Libraries</strong>:</p>
@@ -835,117 +901,132 @@ model.save_pretrained(tuned_model)
 </li>
 </ol>
 <p>This step ensures your fine-tuned model is uploaded to the Hugging Face Hub, making it accessible for future use and sharing with the community. This process uploads your fine-tuned model to the Hugging Face Hub, making it available for easy access and sharing.ss and sharing.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># Step 1: Install Necessary Libraries</span>
-<span style=color:#960050;background-color:#1e0010>!</span>pip install huggingface_hub
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Step 1: Install Necessary Libraries</span>
+<span style="color:#960050;background-color:#1e0010">!</span>pip install huggingface_hub
 
-<span style=color:#75715e># Step 2: Import Libraries</span>
-<span style=color:#f92672>import</span> os
-<span style=color:#f92672>from</span> huggingface_hub <span style=color:#f92672>import</span> HfApi, login
+<span style="color:#75715e"># Step 2: Import Libraries</span>
+<span style="color:#f92672">import</span> os
+<span style="color:#f92672">from</span> huggingface_hub <span style="color:#f92672">import</span> HfApi, login
 
-<span style=color:#75715e># Step 3: Authenticate with Hugging Face Hub</span>
-<span style=color:#75715e># Make sure to set your Hugging Face token in the environment variable</span>
-os<span style=color:#f92672>.</span>environ[<span style=color:#e6db74>&#39;HUGGINGFACE_TOKEN&#39;</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;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&#34;</span>
+<span style="color:#75715e"># Step 3: Authenticate with Hugging Face Hub</span>
+<span style="color:#75715e"># Make sure to set your Hugging Face token in the environment variable</span>
+os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;HUGGINGFACE_TOKEN&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;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&#34;</span>
 
-<span style=color:#75715e># Login to Hugging Face Hub</span>
-login(token<span style=color:#f92672>=</span>os<span style=color:#f92672>.</span>getenv(<span style=color:#e6db74>&#39;HUGGINGFACE_TOKEN&#39;</span>))
+<span style="color:#75715e"># Login to Hugging Face Hub</span>
+login(token<span style="color:#f92672">=</span>os<span style="color:#f92672">.</span>getenv(<span style="color:#e6db74">&#39;HUGGINGFACE_TOKEN&#39;</span>))
 
-<span style=color:#75715e># Step 4: Define the Path and Repository</span>
-model_path <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;RayBernard/llama3-8b-instruct-ft-dgx&#34;</span>
+<span style="color:#75715e"># Step 4: Define the Path and Repository</span>
+model_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;RayBernard/llama3-8b-instruct-ft-dgx&#34;</span>
 
-<span style=color:#75715e># Name of the repo you want to create on huggingface </span>
-repository_name <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;RayBernard/llama3-8b-instruct-ft-dgx&#34;</span>
+<span style="color:#75715e"># Name of the repo you want to create on huggingface </span>
+repository_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;RayBernard/llama3-8b-instruct-ft-dgx&#34;</span>
 
-<span style=color:#75715e># Step 5: Upload Files to Hugging Face Hub</span>
-api <span style=color:#f92672>=</span> HfApi()
+<span style="color:#75715e"># Step 5: Upload Files to Hugging Face Hub</span>
+api <span style="color:#f92672">=</span> HfApi()
 
-<span style=color:#75715e># Create the repository if it doesn&#39;t exist</span>
-api<span style=color:#f92672>.</span>create_repo(repo_id<span style=color:#f92672>=</span>repository_name, exist_ok<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+<span style="color:#75715e"># Create the repository if it doesn&#39;t exist</span>
+api<span style="color:#f92672">.</span>create_repo(repo_id<span style="color:#f92672">=</span>repository_name, exist_ok<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 
-<span style=color:#75715e># Upload all files from the specified path to the repository</span>
-<span style=color:#66d9ef>for</span> root, _, files <span style=color:#f92672>in</span> os<span style=color:#f92672>.</span>walk(model_path):
-    <span style=color:#66d9ef>for</span> file <span style=color:#f92672>in</span> files:
-        file_path <span style=color:#f92672>=</span> os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>join(root, file)
-        api<span style=color:#f92672>.</span>upload_file(
-            path_or_fileobj<span style=color:#f92672>=</span>file_path,
-            path_in_repo<span style=color:#f92672>=</span>os<span style=color:#f92672>.</span>path<span style=color:#f92672>.</span>relpath(file_path, model_path),
-            repo_id<span style=color:#f92672>=</span>repository_name
+<span style="color:#75715e"># Upload all files from the specified path to the repository</span>
+<span style="color:#66d9ef">for</span> root, _, files <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>walk(model_path):
+    <span style="color:#66d9ef">for</span> file <span style="color:#f92672">in</span> files:
+        file_path <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(root, file)
+        api<span style="color:#f92672">.</span>upload_file(
+            path_or_fileobj<span style="color:#f92672">=</span>file_path,
+            path_in_repo<span style="color:#f92672">=</span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>relpath(file_path, model_path),
+            repo_id<span style="color:#f92672">=</span>repository_name
         )
 
-</code></pre></div><h3 id=step-14-fine-tuning-results-and-observations>Step 14: Fine-Tuning Results and Observations</h3>
+</code></pre></div><h3 id="step-14-fine-tuning-results-and-observations">Step 14: Fine-Tuning Results and Observations</h3>
 <p>After fine-tuning the LLaMA3 model oourse question-answering dataset, we observed significant improvements in the model&rsquo;s ability to provide accurate and relevant responses to a wide range of queries. The fine-tuned model demonstrated a better understanding of domain-specific terminology and concepts compared to the baseline model.</p>
 <p>The model&rsquo;s performance was evaluated on a held-out test set, achieving promising results in terms of accuracy and coherence. The fine-tuned model was able to generate more contextually appropriate and informative responses compared to the generic model.</p>
 <p>However, it is important to note that the model&rsquo;s performance may still be limited by the size and diversity of the fine-tuning dataset. Expanding the dataset with more varied questions and answers across different domains could further enhance the model&rsquo;s capabilities and generalization.</p>
 <p>Overall, the fine-tuned model shows promise in assisting users with their information needs across various topics, but it should be used as a complementary tool alongside other reliable sources of information.rmation.rmation.rmation.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>import</span> torch
-<span style=color:#f92672>from</span> transformers <span style=color:#f92672>import</span> AutoTokenizer, AutoModelForCausalLM
-<span style=color:#f92672>from</span> peft <span style=color:#f92672>import</span> PeftModel
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> torch
+<span style="color:#f92672">from</span> transformers <span style="color:#f92672">import</span> AutoTokenizer, AutoModelForCausalLM
+<span style="color:#f92672">from</span> peft <span style="color:#f92672">import</span> PeftModel
 
-<span style=color:#75715e># Define the local path to the model</span>
-local_model_path <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;llama3-8b-instruct-ft-dgx&#34;</span>
+<span style="color:#75715e"># Define the local path to the model</span>
+local_model_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;llama3-8b-instruct-ft-dgx&#34;</span>
 
-<span style=color:#75715e># Load the tokenizer</span>
-tokenizer <span style=color:#f92672>=</span> AutoTokenizer<span style=color:#f92672>.</span>from_pretrained(local_model_path)
-tokenizer<span style=color:#f92672>.</span>pad_token <span style=color:#f92672>=</span> tokenizer<span style=color:#f92672>.</span>eos_token
-tokenizer<span style=color:#f92672>.</span>padding_side <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;right&#34;</span>
+<span style="color:#75715e"># Load the tokenizer</span>
+tokenizer <span style="color:#f92672">=</span> AutoTokenizer<span style="color:#f92672">.</span>from_pretrained(local_model_path)
+tokenizer<span style="color:#f92672">.</span>pad_token <span style="color:#f92672">=</span> tokenizer<span style="color:#f92672">.</span>eos_token
+tokenizer<span style="color:#f92672">.</span>padding_side <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;right&#34;</span>
 
-<span style=color:#75715e># Load the model</span>
-model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(local_model_path)
+<span style="color:#75715e"># Load the model</span>
+model <span style="color:#f92672">=</span> AutoModelForCausalLM<span style="color:#f92672">.</span>from_pretrained(local_model_path)
 
-<span style=color:#75715e># Load the PEFT fine-tuned model, if applicable</span>
-model <span style=color:#f92672>=</span> PeftModel<span style=color:#f92672>.</span>from_pretrained(model, local_model_path)
+<span style="color:#75715e"># Load the PEFT fine-tuned model, if applicable</span>
+model <span style="color:#f92672">=</span> PeftModel<span style="color:#f92672">.</span>from_pretrained(model, local_model_path)
 
-<span style=color:#75715e># Move the model to the correct device</span>
-device <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>device(<span style=color:#e6db74>&#34;xpu:0&#34;</span> <span style=color:#66d9ef>if</span> torch<span style=color:#f92672>.</span>xpu<span style=color:#f92672>.</span>is_available() <span style=color:#66d9ef>else</span> <span style=color:#e6db74>&#34;cpu&#34;</span>)
-model <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>to(device)
+<span style="color:#75715e"># Move the model to the correct device</span>
+device <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>device(<span style="color:#e6db74">&#34;xpu:0&#34;</span> <span style="color:#66d9ef">if</span> torch<span style="color:#f92672">.</span>xpu<span style="color:#f92672">.</span>is_available() <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;cpu&#34;</span>)
+model <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>to(device)
 
-<span style=color:#75715e># Test inputs</span>
-test_inputs <span style=color:#f92672>=</span> [
-       <span style=color:#e6db74>&#34;How do I check the status of the RAID array on my DGX system?&#34;</span>,
-       <span style=color:#e6db74>&#34;Can you show me how to get detailed information about the RAID configuration on my DGX?&#34;</span>,
-       <span style=color:#e6db74>&#34;How can I allow a user to access Docker on the DGX?&#34;</span>
+<span style="color:#75715e"># Test inputs</span>
+test_inputs <span style="color:#f92672">=</span> [
+       <span style="color:#e6db74">&#34;How do I check the status of the RAID array on my DGX system?&#34;</span>,
+       <span style="color:#e6db74">&#34;Can you show me how to get detailed information about the RAID configuration on my DGX?&#34;</span>,
+       <span style="color:#e6db74">&#34;How can I allow a user to access Docker on the DGX?&#34;</span>
 ]
 
-<span style=color:#75715e># Run inference on test inputs</span>
-<span style=color:#66d9ef>for</span> text <span style=color:#f92672>in</span> test_inputs:
-    <span style=color:#75715e># Tokenize the input text and convert to PyTorch tensors, then move to the selected device (XPU or CPU)</span>
-    inputs <span style=color:#f92672>=</span> tokenizer(text, return_tensors<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;pt&#34;</span>)<span style=color:#f92672>.</span>to(device)
+<span style="color:#75715e"># Run inference on test inputs</span>
+<span style="color:#66d9ef">for</span> text <span style="color:#f92672">in</span> test_inputs:
+    <span style="color:#75715e"># Tokenize the input text and convert to PyTorch tensors, then move to the selected device (XPU or CPU)</span>
+    inputs <span style="color:#f92672">=</span> tokenizer(text, return_tensors<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pt&#34;</span>)<span style="color:#f92672">.</span>to(device)
     
-    <span style=color:#75715e># Generate text based on the input, with the following parameters:</span>
-    outputs <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>generate(
-        <span style=color:#f92672>**</span>inputs,  <span style=color:#75715e># Pass the tokenized inputs to the model</span>
-        max_new_tokens<span style=color:#f92672>=</span><span style=color:#ae81ff>100</span>,  <span style=color:#75715e># Maximum number of new tokens to generate</span>
-        do_sample<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>,  <span style=color:#75715e># Use sampling for generation (as opposed to greedy decoding)</span>
-        top_k<span style=color:#f92672>=</span><span style=color:#ae81ff>100</span>,  <span style=color:#75715e># Use top-k sampling, considering the top 100 tokens</span>
-        temperature<span style=color:#f92672>=</span><span style=color:#ae81ff>0.9</span>,  <span style=color:#75715e># Sampling temperature; higher values mean more randomness</span>
-        eos_token_id<span style=color:#f92672>=</span>tokenizer<span style=color:#f92672>.</span>eos_token_id  <span style=color:#75715e># End-of-sequence token ID to stop generation</span>
+    <span style="color:#75715e"># Generate text based on the input, with the following parameters:</span>
+    outputs <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>generate(
+        <span style="color:#f92672">**</span>inputs,  <span style="color:#75715e"># Pass the tokenized inputs to the model</span>
+        max_new_tokens<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>,  <span style="color:#75715e"># Maximum number of new tokens to generate</span>
+        do_sample<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,  <span style="color:#75715e"># Use sampling for generation (as opposed to greedy decoding)</span>
+        top_k<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>,  <span style="color:#75715e"># Use top-k sampling, considering the top 100 tokens</span>
+        temperature<span style="color:#f92672">=</span><span style="color:#ae81ff">0.9</span>,  <span style="color:#75715e"># Sampling temperature; higher values mean more randomness</span>
+        eos_token_id<span style="color:#f92672">=</span>tokenizer<span style="color:#f92672">.</span>eos_token_id  <span style="color:#75715e"># End-of-sequence token ID to stop generation</span>
     )
     
-    <span style=color:#75715e># Decode the generated tokens back to text and print the result, skipping special tokens</span>
-    print(tokenizer<span style=color:#f92672>.</span>decode(outputs[<span style=color:#ae81ff>0</span>], skip_special_tokens<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>))
+    <span style="color:#75715e"># Decode the generated tokens back to text and print the result, skipping special tokens</span>
+    print(tokenizer<span style="color:#f92672">.</span>decode(outputs[<span style="color:#ae81ff">0</span>], skip_special_tokens<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>))
 
-</code></pre></div><h3 id=happy-fine-tuning->Happy Fine-Tuning! 😄✨</h3>
+</code></pre></div><h3 id="happy-fine-tuning-">Happy Fine-Tuning! 😄✨</h3>
 <p>Congratulations on reaching this milestone! You now have the tools and knowledge to fine-tune the powerful LLaMA3 model on your own datasets. Feel free to experiment, customize, and adapt this notebook to fit your specific use case. Try different datasets, tweak the hyperparameters, and observe how the model&rsquo;s performance evolves.</p>
 <p>We encourage you to share your fine-tuned models and experiences with the community. Consider open-sourcing your work on platforms like GitHub or Hugging Face, and write blog posts to detail your journey. Your insights and achievements can inspire and assist others in their own fine-tuning projects.</p>
 <p>If you encounter any issues or have suggestions for improvement, please don&rsquo;t hesitate to reach out and provide feedback. We value your input and are committed to making this notebook and the fine-tuning process as smooth and enjoyable as possible.</p>
-<ul class=pa0>
+<p>SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2024, Rahul Unnikrishnan Nair <a href="mailto:rahul.unnikrishnan.nair@intel.com">rahul.unnikrishnan.nair@intel.com</a>
+Ray Bernard <a href="mailto:ray.bernard@outlooi.com">ray.bernard@outlooi.com</a></p>
+<ul class="pa0">
+  
 </ul>
 <div class="mt6 instapaper_ignoref">
-</div>
-</div>
-<aside class="w-30-l mt6-l">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
 </aside>
-</article>
-</main>
-<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
-<div class="flex justify-between">
-<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=https://raymondbernard.github.io/>
-&copy; Ray Bernard's Finetune Journey 2024
-</a>
-<div>
-<div class=ananke-socials>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://raymondbernard.github.io/" >
+    &copy;  Ray Bernard's Finetune Journey 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
 </div>
 </div>
-</div>
+  </div>
 </footer>
-</body>
+
+  </body>
 </html>
