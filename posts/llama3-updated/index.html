@@ -6,8 +6,7 @@
     
     <title>Ray Bernard&#39;s Finetune Journey</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <meta name="description" content="Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance. Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud
-Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed.">
+    <meta name="description" content="Fine-tuning LLaMa 3 8B Instruct on Intel Max Series GPUs 🚀 Intel GPUs offer incredible speed and cost-effectiveness. I successfully trained the LLaMa 3 8B Instruct model using my custom dataset. By leveraging HuggingFace, I imported my dataset, obtained the LLaMa 3 8B Instruct model, and trained it using the Transformer Trainer. The entire training process was meticulously monitored by Weights and Biases, providing detailed insights into memory usage, disk I/O, training loss, and more.">
     <meta name="generator" content="Hugo 0.92.2" />
     
     
@@ -36,22 +35,19 @@ Step 1: Initial Setup Run this step only once to ensure you have the proper libr
     
 
     <meta property="og:title" content="" />
-<meta property="og:description" content="Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance. Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud
-Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed." />
+<meta property="og:description" content="Fine-tuning LLaMa 3 8B Instruct on Intel Max Series GPUs 🚀 Intel GPUs offer incredible speed and cost-effectiveness. I successfully trained the LLaMa 3 8B Instruct model using my custom dataset. By leveraging HuggingFace, I imported my dataset, obtained the LLaMa 3 8B Instruct model, and trained it using the Transformer Trainer. The entire training process was meticulously monitored by Weights and Biases, providing detailed insights into memory usage, disk I/O, training loss, and more." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://raymondbernard.github.io/posts/llama3-updated/" /><meta property="article:section" content="posts" />
 
 
 
 <meta itemprop="name" content="">
-<meta itemprop="description" content="Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance. Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud
-Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed.">
+<meta itemprop="description" content="Fine-tuning LLaMa 3 8B Instruct on Intel Max Series GPUs 🚀 Intel GPUs offer incredible speed and cost-effectiveness. I successfully trained the LLaMa 3 8B Instruct model using my custom dataset. By leveraging HuggingFace, I imported my dataset, obtained the LLaMa 3 8B Instruct model, and trained it using the Transformer Trainer. The entire training process was meticulously monitored by Weights and Biases, providing detailed insights into memory usage, disk I/O, training loss, and more.">
 
-<meta itemprop="wordCount" content="4784">
+<meta itemprop="wordCount" content="4993">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀 Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance. Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud
-Step 1: Initial Setup Run this step only once to ensure you have the proper libraries installed."/>
+<meta name="twitter:description" content="Fine-tuning LLaMa 3 8B Instruct on Intel Max Series GPUs 🚀 Intel GPUs offer incredible speed and cost-effectiveness. I successfully trained the LLaMa 3 8B Instruct model using my custom dataset. By leveraging HuggingFace, I imported my dataset, obtained the LLaMa 3 8B Instruct model, and trained it using the Transformer Trainer. The entire training process was meticulously monitored by Weights and Biases, providing detailed insights into memory usage, disk I/O, training loss, and more."/>
 
 	
   </head>
@@ -122,12 +118,14 @@ Step 1: Initial Setup Run this step only once to ensure you have the proper libr
       
       
     </header>
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h2 id="finetuning-llama3-8b-instruct-on-intel-max-series-gpus-">Finetuning LLaMa3 8B Instruct on Intel Max Series GPUs 🚀</h2>
-<p>Intel® Data Center Max 1100 GPU: A High-Performance 300-Watt Double-Wide AIC Card
-Featuring 56 Xe cores and 48 GB of HBM2E memory, the Intel® Data Center Max 1100 GPU delivers powerful performance.
-Note this code is a juypter notebook run on Intel&rsquo;s Developer Cloud</p>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h2 id="fine-tuning-llama-3-8b-instruct-on-intel-max-series-gpus-">Fine-tuning LLaMa 3 8B Instruct on Intel Max Series GPUs 🚀</h2>
+<p>Intel GPUs offer incredible speed and cost-effectiveness. I successfully trained the LLaMa 3 8B Instruct model using my custom dataset. By leveraging HuggingFace, I imported my dataset, obtained the LLaMa 3 8B Instruct model, and trained it using the Transformer Trainer. The entire training process was meticulously monitored by Weights and Biases, providing detailed insights into memory usage, disk I/O, training loss, and more. What an outstanding product!</p>
+<p>The best part? It&rsquo;s all free! I was amazed by the capabilities of the Intel Developer Cloud, particularly for ML, HPC, and GenAI workflows. The Intel® Data Center Max 1100 GPU, a high-performance 300-watt double-wide AIC card, features 56 Xe cores and 48 GB of HBM2E memory, delivering exceptional performance.</p>
+<p>In the spirit of open source, I developed the following notebook, partially based on the original work of Rahul Unnikrishnan Nair from Intel, &ldquo;Fine-tuning Google&rsquo;s Gemma Model on Intel Max Series GPUs.&rdquo; Thank you for the foundation. I was able to significantly tweak and create a process to fine-tune LLaMa 3 models, which represent a significant leap from LLaMa 2 in terms of capabilities. It&rsquo;s amazing how such small models can produce great results with quality data.</p>
+<p>I will be producing a detailed video review of the notebook, which you can find on my YouTube channel: <a href="https://www.youtube.com/channel/UC-OszhqWsF1tqqECdeLI_7Q">YouTube Channel</a>.</p>
+<p>**Note: This code was executed in a Jupyter notebook on Intel&rsquo;s Developer Cloud.</p>
 <h3 id="step-1-initial-setup">Step 1: Initial Setup</h3>
-<p>Run this step only once to ensure you have the proper libraries installed. Additionally, make sure to use the Modin kernel!</p>
+<p>Run this step only once to ensure you have the proper libraries installed. Additionally, make sure to use the Modin kernel(it&rsquo;s a kernel on the Intel Developer Cloud.  Just join and then access the free training and you will presented with a juypter lab!</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> sys
 <span style="color:#f92672">import</span> site
 <span style="color:#f92672">import</span> os
@@ -191,7 +189,7 @@ site_packages_dir <span style="color:#f92672">=</span> site<span style="color:#f
 
 
 </code></pre></div><h3 id="step-2-check-intel-xpu-availability-and-retrieve-device-capabilities">Step 2: Check Intel XPU Availability and Retrieve Device Capabilities</h3>
-<p>In this step, we will import necessary libraries, check the availability of Intel XPU (eXtreme Performance Unit), and retrieve detailed device capabilities. This ensures that our environment is correctly configured to leverage the Intel XPU for optimal performancnt available&quot;)</p>
+<p>In this step, we will import necessary libraries, check the availability of Intel XPU (eXtreme Performance Unit), and retrieve detailed device capabilities. This ensures that our environment is correctly configured to leverage the Intel XPU for optimal performance available&quot;</p>
 <pre tabindex="0"><code>
 
 ```python
