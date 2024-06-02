@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:64068/posts/</loc>
+    <loc>https://raymondbernard.github.io/posts/</loc>
     <lastmod>2024-06-01T18:28:27-04:00</lastmod>
   </url><url>
-    <loc>http://localhost:64068/</loc>
+    <loc>https://raymondbernard.github.io/</loc>
     <lastmod>2024-06-01T18:28:27-04:00</lastmod>
   </url><url>
-    <loc>http://localhost:64068/posts/llama3-updated/</loc>
+    <loc>https://raymondbernard.github.io/posts/llama3-updated/</loc>
   </url><url>
-    <loc>http://localhost:64068/categories/</loc>
+    <loc>https://raymondbernard.github.io/categories/</loc>
   </url><url>
-    <loc>http://localhost:64068/tags/</loc>
+    <loc>https://raymondbernard.github.io/tags/</loc>
   </url>
 </urlset>
